@@ -4,6 +4,7 @@ import { schemaExtensions } from "./schema";
 import { DocMeta } from "./DocMeta";
 import { SlashCommand } from "./SlashCommand";
 import { SearchHighlight } from "./SearchHighlight";
+import { HoverBlock } from "./HoverBlock";
 import { platform } from "../lib/platform";
 import { dirname, isAbsolute, joinPath } from "../lib/paths";
 
@@ -43,5 +44,6 @@ export function buildExtensions(o: BuildOptions): AnyExtension[] {
     DocMeta.configure({ getEdited: o.getEdited }),
     SlashCommand,
     SearchHighlight.configure({ onChange: o.onSearch }),
+    HoverBlock,
   ];
 }

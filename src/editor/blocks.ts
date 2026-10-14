@@ -1,23 +1,9 @@
 import type { Editor, Range } from "@tiptap/core";
 import type { ComponentType } from "react";
-import {
-  Code,
-  Heading1,
-  Heading2,
-  Heading3,
-  Image,
-  List,
-  ListChecks,
-  ListCollapse,
-  ListOrdered,
-  MessageSquare,
-  Pilcrow,
-  Quote,
-  Table,
-} from "lucide-react";
+import { Heading1, Heading2, Heading3, Pilcrow } from "lucide-react";
 import { fold } from "../lib/format";
 import { insertImageFromDialog } from "../store/actions";
-import { DividerIcon } from "../components/icons";
+import { mockIcon } from "../components/MockIcons";
 
 export interface BlockItem {
   id: string;
@@ -70,21 +56,21 @@ export const BLOCKS: BlockItem[] = [
   { id: "h1", title: "Título 1", description: "Título principal", keywords: "titulo heading h1 grande", icon: Heading1, run: (e, r) => chain(e, r).setHeading({ level: 1 }).run() },
   { id: "h2", title: "Título 2", description: "Título de grupo", keywords: "titulo heading h2 grupo secao", icon: Heading2, run: (e, r) => chain(e, r).setHeading({ level: 2 }).run() },
   { id: "h3", title: "Título 3", description: "Subtítulo", keywords: "titulo heading h3 subtitulo", icon: Heading3, run: (e, r) => chain(e, r).setHeading({ level: 3 }).run() },
-  { id: "tabela", title: "Tabela", description: "Linhas e colunas", keywords: "tabela table grade colunas", icon: Table, run: (e, r) => chain(e, r).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run() },
-  { id: "tarefas", title: "Lista de tarefas", description: "Caixinhas para marcar", keywords: "tarefas todo checklist caixa", icon: ListChecks, run: (e, r) => chain(e, r).toggleTaskList().run() },
-  { id: "recolhivel", title: "Seção recolhível", description: "Esconde um grupo de itens", keywords: "recolhivel secao toggle details grupo esconder", icon: ListCollapse, run: (e, r) => insertDetails(e, r) },
-  { id: "destaque", title: "Caixa de destaque", description: "Para avisos e lembretes", keywords: "destaque callout aviso nota lembrete", icon: MessageSquare, run: (e, r) => insertCallout(e, r) },
-  { id: "marcadores", title: "Lista com marcadores", description: "Itens com bolinha", keywords: "lista marcadores bullet", icon: List, run: (e, r) => chain(e, r).toggleBulletList().run() },
-  { id: "numerada", title: "Lista numerada", description: "Itens em ordem", keywords: "lista numerada ordenada numeros", icon: ListOrdered, run: (e, r) => chain(e, r).toggleOrderedList().run() },
-  { id: "citacao", title: "Citação", description: "Trecho recuado", keywords: "citacao quote", icon: Quote, run: (e, r) => chain(e, r).toggleBlockquote().run() },
-  { id: "codigo", title: "Bloco de código", description: "Texto monoespaçado", keywords: "codigo code mono", icon: Code, run: (e, r) => chain(e, r).toggleCodeBlock().run() },
-  { id: "divisor", title: "Divisor", description: "Linha separadora", keywords: "divisor linha separador hr", icon: DividerIcon, run: (e, r) => chain(e, r).setHorizontalRule().run() },
+  { id: "tabela", title: "Tabela", description: "Linhas e colunas", keywords: "tabela table grade colunas", icon: mockIcon("table"), run: (e, r) => chain(e, r).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run() },
+  { id: "tarefas", title: "Lista de tarefas", description: "Caixinhas para marcar", keywords: "tarefas todo checklist caixa", icon: mockIcon("checks"), run: (e, r) => chain(e, r).toggleTaskList().run() },
+  { id: "recolhivel", title: "Seção recolhível", description: "Esconde um grupo de itens", keywords: "recolhivel secao toggle details grupo esconder", icon: mockIcon("collapse"), run: (e, r) => insertDetails(e, r) },
+  { id: "destaque", title: "Caixa de destaque", description: "Para avisos e lembretes", keywords: "destaque callout aviso nota lembrete", icon: mockIcon("callout"), run: (e, r) => insertCallout(e, r) },
+  { id: "marcadores", title: "Lista com marcadores", description: "Itens com bolinha", keywords: "lista marcadores bullet", icon: mockIcon("list"), run: (e, r) => chain(e, r).toggleBulletList().run() },
+  { id: "numerada", title: "Lista numerada", description: "Itens em ordem", keywords: "lista numerada ordenada numeros", icon: mockIcon("list-ol"), run: (e, r) => chain(e, r).toggleOrderedList().run() },
+  { id: "citacao", title: "Citação", description: "Trecho recuado", keywords: "citacao quote", icon: mockIcon("quote"), run: (e, r) => chain(e, r).toggleBlockquote().run() },
+  { id: "codigo", title: "Bloco de código", description: "Texto monoespaçado", keywords: "codigo code mono", icon: mockIcon("code"), run: (e, r) => chain(e, r).toggleCodeBlock().run() },
+  { id: "divisor", title: "Divisor", description: "Linha separadora", keywords: "divisor linha separador hr", icon: mockIcon("divider"), run: (e, r) => chain(e, r).setHorizontalRule().run() },
   {
     id: "imagem",
     title: "Imagem",
     description: "De um arquivo do computador",
     keywords: "imagem foto figura",
-    icon: Image,
+    icon: mockIcon("image"),
     run: (e, r) => {
       chain(e, r).run();
       void insertImageFromDialog();

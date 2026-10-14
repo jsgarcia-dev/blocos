@@ -35,8 +35,9 @@ export const DocMeta = Extension.create<DocMetaOptions>({
               const isTitle = (n.type.name === "heading" && n.attrs.level >= 2) || n.type.name === "detailsSummary";
               if (!isTitle) return !n.isTextblock;
               const text = n.textContent;
-              const i = text.indexOf(" — ");
-              if (i > 0) {
+              // o trecho suave começa no travessão; o espaço antes fica com o peso do título (como no mock)
+              const i = text.indexOf(" — ") + 1;
+              if (i > 1) {
                 // converte o deslocamento no texto em posição do documento
                 let offset = 0;
                 let start = -1;

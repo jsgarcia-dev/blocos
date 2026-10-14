@@ -97,7 +97,8 @@ kbd {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: var(--ch);
+  /* mesmo fundo da janela do mock (aparece só na borda arredondada dos cantos) */
+  background: var(--cv);
   /* a janela não tem moldura do sistema: os cantos arredondados são os do mock */
   border-radius: 14px;
   overflow: hidden;
@@ -144,7 +145,7 @@ kbd {
 
 .ptabs {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
   overflow-x: auto;
   scrollbar-width: none;
@@ -203,11 +204,17 @@ kbd {
 .pt .x {
   display: grid;
   place-items: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 5px;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
   color: #9c9ca6;
-  margin-right: -3px;
+}
+
+.pt .x .ic,
+.pt.on .x .ic {
+  width: 12px;
+  height: 12px;
+  color: #9c9ca6;
 }
 
 .pt:not(.on):not(:hover) .x {
@@ -215,7 +222,6 @@ kbd {
 }
 
 .pt .x:hover {
-  background: rgba(127, 127, 140, 0.22);
   color: #e4e4e7;
 }
 
@@ -228,7 +234,6 @@ kbd {
   height: 7px;
   border-radius: 50%;
   background: var(--ac);
-  margin: 0 1.5px 0 1.5px;
   flex-shrink: 0;
 }
 
@@ -240,7 +245,6 @@ kbd {
   border-radius: 4px;
   background: var(--ch3);
   color: #d4d4d8;
-  letter-spacing: 0.02em;
 }
 
 .pt.on .badge {
@@ -404,14 +408,28 @@ kbd {
   flex-shrink: 0;
 }
 
+.sec.with-act {
+  position: relative;
+}
+
 .sec.with-act button {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
   color: #6b6b75;
   width: 18px;
   height: 18px;
   border-radius: 5px;
   display: grid;
   place-items: center;
-  margin-right: -4px;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.side:hover .sec.with-act button,
+.sec.with-act button:focus-visible {
+  opacity: 1;
 }
 
 .sec.with-act button:hover {
@@ -598,6 +616,9 @@ kbd {
   gap: 16px;
   padding: 0 8px 0 11px;
   height: 32px;
+  /* largura do mock ("Título 2"): a barra não pula quando o estilo muda */
+  min-width: 96.84px;
+  justify-content: space-between;
 }
 
 .rb.drop svg {
@@ -625,6 +646,11 @@ kbd {
   min-width: 18px;
   padding: 0 2px;
   color: var(--mu);
+}
+
+/* como no mock: o desenho de 17px "vaza" para os lados e o botão fica com 18px */
+.rb.mini .ic {
+  margin: 0 -3px;
 }
 
 .rb.export {
@@ -802,6 +828,9 @@ kbd {
 
 /* ---------------------------------------------------------- barra de status */
 .sbar {
+  position: relative;
+  /* fica por cima dos menus flutuantes, como a borda da área do documento no mock */
+  z-index: 55;
   height: 30px;
   background: var(--ribbon);
   border-top: 1px solid var(--ln);
@@ -1017,6 +1046,8 @@ kbd {
 
 .slash {
   width: 470px;
+  font-size: 15px;
+  line-height: 1.5;
   background: var(--pop);
   border-radius: 14px;
   box-shadow:
@@ -1040,9 +1071,14 @@ kbd {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
-  max-height: 252px;
+  /* duas linhas visíveis, como no mock; o resto aparece rolando ou filtrando */
+  max-height: 103.5px;
   overflow-y: auto;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+}
+
+.slash .opts::-webkit-scrollbar {
+  display: none;
 }
 
 .slash .opt {

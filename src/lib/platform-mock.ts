@@ -63,6 +63,43 @@ const SEED: Record<string, string> = {
 for (let i = 1; i <= 19; i++) SEED[`${DOCS}/Arquivo/nota-${String(i).padStart(2, "0")}.md`] = `# Nota ${i}\n`;
 for (let i = 1; i <= 9; i++) SEED[`${WORK}/projeto-${i}.md`] = `# Projeto ${i}\n`;
 
+/*
+ * Modo "?demo=mock": reproduz exatamente o estado mostrado no mock aprovado
+ * (usado só para comparar o visual pixel a pixel; nunca no app instalado).
+ */
+const DEMO = typeof location !== "undefined" && new URLSearchParams(location.search).get("demo") === "mock";
+
+const DEMO_CONTROLE = `# Controle de clientes
+
+## Banco Alfa — Equipe Norte
+
+- \`AB1\` Ana Ribeiro · (11) 90000-0001 · ==conferir documento==
+- \`AB2\` Bruno Matos · (11) 90000-0002
+- \`AB3\` Carla Nunes · (21) 90000-0003 · <mark style="background-color: #C3F0C8">ok</mark>
+
+<details>
+<summary>Banco Beta — Equipe Sul</summary>
+
+- \`AC1\` Diego Prado
+- \`AC2\` Elisa Torres
+
+</details>
+
+<details>
+<summary>Banco Gama — Equipe Leste</summary>
+
+${Array.from({ length: 12 }, (_, i) => `- \`AG${i + 1}\` Registro ${i + 1}`).join("\n")}
+
+</details>
+`;
+
+/** "Editado hoje, 09:42", como no mock. */
+function todayAt(h: number, m: number) {
+  const d = new Date();
+  d.setHours(h, m, 0, 0);
+  return d.getTime();
+}
+
 const SESSION_SEED = {
   version: 1,
   activePath: `${DOCS}/Controle de clientes.md`,
@@ -94,6 +131,11 @@ const LIBRARY_SEED = {
 const FS_KEY = "blocos-demo-fs";
 
 function loadFs(): Record<string, { content: string; mtime: number }> {
+  if (DEMO) {
+    const fs = Object.fromEntries(Object.entries(SEED).map(([p, c]) => [p, { content: c, mtime: Date.now() - 600e3 }]));
+    fs[`${DOCS}/Controle de clientes.md`] = { content: DEMO_CONTROLE, mtime: todayAt(9, 42) };
+    return fs;
+  }
   try {
     const raw = localStorage.getItem(FS_KEY);
     if (raw) return JSON.parse(raw);
@@ -101,12 +143,15 @@ function loadFs(): Record<string, { content: string; mtime: number }> {
     /* sem armazenamento */
   }
   const now = Date.now() - 600e3;
-  return Object.fromEntries(Object.entries(SEED).map(([p, c]) => [p, { content: c, mtime: now }]));
+  const fs = Object.fromEntries(Object.entries(SEED).map(([p, c]) => [p, { content: c, mtime: now }]));
+  if (DEMO) fs[`${DOCS}/Controle de clientes.md`] = { content: DEMO_CONTROLE, mtime: todayAt(9, 42) };
+  return fs;
 }
 
 export function createMockPlatform(): Platform {
   const fs = loadFs();
   const persist = () => {
+    if (DEMO) return;
     try {
       localStorage.setItem(FS_KEY, JSON.stringify(fs));
     } catch {
@@ -188,6 +233,10 @@ export function createMockPlatform(): Platform {
       });
     },
     async loadState(name) {
+      if (DEMO && name === "biblioteca") {
+        return JSON.stringify({ ...LIBRARY_SEED, prefs: { autosave: false }, lastPosition: { ...LIBRARY_SEED.lastPosition, at: Date.now() - 120e3 } });
+      }
+      if (DEMO && name === "sessao") return JSON.stringify(SESSION_SEED);
       try {
         const raw = localStorage.getItem(`blocos-demo-${name}`);
         if (raw) return raw;
@@ -199,6 +248,7 @@ export function createMockPlatform(): Platform {
       return null;
     },
     async saveState(name, data) {
+      if (DEMO) return;
       try {
         localStorage.setItem(`blocos-demo-${name}`, data);
       } catch {

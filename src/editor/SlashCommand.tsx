@@ -56,7 +56,7 @@ const SlashMenu = forwardRef<MenuHandle, MenuProps>(({ items, command }, ref) =>
                 onClick={() => command(item)}
               >
                 <i className="oi">
-                  <Icon size={17} strokeWidth={2} />
+                  <Icon size={16} strokeWidth={2} />
                 </i>
                 <div>
                   <b>{item.title}</b>
@@ -92,7 +92,7 @@ export const SlashCommand = Extension.create({
         decorationContent: "Filtrar blocos…",
         decorationEmptyClass: "is-empty",
         placement: "bottom-start",
-        offset: { mainAxis: 6, crossAxis: -2 },
+        offset: { mainAxis: 3, crossAxis: 0 },
         items: ({ query }) => filterBlocks(query),
         allow: ({ state, range }) => {
           const $from = state.doc.resolve(range.from);
@@ -116,7 +116,23 @@ export const SlashCommand = Extension.create({
                 el.className = "slash-host";
                 root = createRoot(el);
                 draw(props);
-                unmount = props.mount(el);
+                const host = el;
+                // como no mock: alinhado à esquerda da linha, 4px abaixo dela (ou acima, se não couber)
+                const place = () => {
+                  const line = props.editor.view.dom.querySelector(".slash-query")?.closest("p, li, h1, h2, h3, td, th, summary") as HTMLElement | null;
+                  if (!line) return;
+                  const r = line.getBoundingClientRect();
+                  const area = (line.closest(".canvas") as HTMLElement | null)?.getBoundingClientRect();
+                  const bottom = area ? area.bottom : window.innerHeight;
+                  const topLimit = area ? area.top : 0;
+                  const h = host.offsetHeight;
+                  const below = r.bottom + 4;
+                  // abre embaixo; só sobe se faltar bastante espaço e couber em cima
+                  const top = below + h > bottom + 12 && r.top - 4 - h >= topLimit ? r.top - 4 - h : below;
+                  Object.assign(host.style, { position: "absolute", left: `${r.left}px`, top: `${top}px` });
+                };
+                unmount = props.mount(el, { onPosition: place });
+                requestAnimationFrame(place);
               } catch (e) {
                 console.error("[slash] falhou", e);
               }

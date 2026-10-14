@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChevronRight, FileText, Folder, FolderOpen, Pin, PinOff, Plus, RotateCcw, Search, SlidersHorizontal } from "lucide-react";
+import { FolderOpen, PinOff } from "lucide-react";
 import { platform, type FolderEntry } from "../lib/platform";
 import { basename, extname, stripExt } from "../lib/paths";
 import { formatAgo } from "../lib/format";
 import { activeTab, setState, useApp } from "../store/store";
 import { addFolder, forgetRecent, openPaths, removeFolder, togglePin } from "../store/actions";
+import { MI } from "./MockIcons";
 
 function FileItem({ path, icon, onContext }: { path: string; icon: "pin" | "file"; onContext?: (e: React.MouseEvent) => void }) {
   const current = useApp((s) => s.tabs.find((t) => t.id === s.activeId)?.path === path);
@@ -20,7 +21,7 @@ function FileItem({ path, icon, onContext }: { path: string; icon: "pin" | "file
         onContext?.(e);
       }}
     >
-      {icon === "pin" ? <Pin className="ic" size={15} /> : <FileText className="ic" size={15} />}
+      {icon === "pin" ? <MI name="pin" size={15} /> : <MI name="file" size={15} />}
       <span className="nm">{stripExt(basename(path))}</span>
       {isTxt && <span className="badge">TXT</span>}
       <button
@@ -31,7 +32,7 @@ function FileItem({ path, icon, onContext }: { path: string; icon: "pin" | "file
           togglePin(path);
         }}
       >
-        {pinned ? <PinOff size={13} /> : <Pin size={13} />}
+        {pinned ? <PinOff size={13} /> : <MI name="pin" size={13} />}
       </button>
     </div>
   );
@@ -49,7 +50,7 @@ function Tree({ entry, depth }: { entry: FolderEntry; depth: number }) {
   return (
     <div>
       <div className="it tree-dir" style={{ paddingLeft: 8 + depth * 14 }} onClick={() => setOpen(!open)}>
-        <ChevronRight className={`chev${open ? " open" : ""}`} size={13} />
+        <MI name="chev-r" className={`chev${open ? " open" : ""}`} size={13} />
         <span className="nm">{entry.name}</span>
         <span className="c">{entry.count}</span>
       </div>
@@ -96,7 +97,7 @@ function FolderRow({ path, tick }: { path: string; tick: number }) {
           });
         }}
       >
-        {open ? <FolderOpen className="ic" size={15} /> : <Folder className="ic" size={15} />}
+        {open ? <FolderOpen className="ic" size={15} /> : <MI name="folder" size={15} />}
         <span className="nm">{basename(path)}</span>
         <span className="c">{error ? "—" : entry ? entry.count : ""}</span>
       </div>
@@ -136,7 +137,7 @@ export function Sidebar() {
   return (
     <aside className="side">
       <button className="search" onClick={() => setState({ quickSearch: true })}>
-        <Search className="ic" size={14} />
+        <MI name="search" size={14} />
         Buscar em tudo
         <kbd>Ctrl P</kbd>
       </button>
@@ -151,7 +152,7 @@ export function Sidebar() {
             }}
           >
             <div className="rt">
-              <RotateCcw size={12} strokeWidth={2.5} />
+              <MI name="restore" size={12} strokeWidth={2.5} />
               Continuar de onde parou
             </div>
             <b>{basename(last.path)}</b>
@@ -215,7 +216,7 @@ export function Sidebar() {
         <div className="sec with-act">
           PASTAS
           <button title="Adicionar pasta" onClick={() => void addFolder().then(refresh)}>
-            <Plus size={13} />
+            <MI name="plus" size={13} />
           </button>
         </div>
         {library.folders.map((f) => (
@@ -224,7 +225,7 @@ export function Sidebar() {
       </div>
 
       <div className="it prefs" onClick={() => setState({ preferences: true })}>
-        <SlidersHorizontal className="ic" size={15} />
+        <MI name="settings" size={15} />
         Preferências
       </div>
     </aside>

@@ -2,7 +2,8 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import type { Editor } from "@tiptap/core";
 import type { Node as PMNode } from "@tiptap/pm/model";
 import { NodeSelection } from "@tiptap/pm/state";
-import { GripVertical, Plus } from "lucide-react";
+import { hoverKey } from "../editor/HoverBlock";
+import { MI } from "./MockIcons";
 
 interface Hover {
   node: PMNode;
@@ -55,9 +56,8 @@ export function BlockHandle({ editor, sheet }: { editor: Editor; sheet: RefObjec
     if (!root) return;
 
     const mark = (h: Hover | null) => {
-      if (current.current?.dom !== h?.dom) {
-        current.current?.dom.classList.remove("is-hovered");
-        h?.dom.classList.add("is-hovered");
+      if (current.current?.pos !== h?.pos && !editor.isDestroyed) {
+        editor.view.dispatch(editor.state.tr.setMeta(hoverKey, h ? h.pos : null).setMeta("addToHistory", false));
       }
       current.current = h;
       setHover(h);
@@ -72,7 +72,11 @@ export function BlockHandle({ editor, sheet }: { editor: Editor; sheet: RefObjec
         const r = dom.getBoundingClientRect();
         return y >= r.top - 6 && y <= r.bottom + 6;
       });
-      if (found) mark({ ...found, top: toSheetY(found.dom.getBoundingClientRect().top) });
+      if (found) {
+        // mesma posição do mock: topo do bloco + margem superior + 2px
+        const marginTop = parseFloat(getComputedStyle(found.dom).marginTop) || 0;
+        mark({ ...found, top: toSheetY(found.dom.getBoundingClientRect().top) + marginTop + 2 });
+      }
     };
     const onLeave = () => {
       if (drag.current) return;
@@ -90,7 +94,7 @@ export function BlockHandle({ editor, sheet }: { editor: Editor; sheet: RefObjec
       root.removeEventListener("mousemove", onMove);
       root.removeEventListener("mouseleave", onLeave);
       editor.off("update", onChange);
-      current.current?.dom.classList.remove("is-hovered");
+      if (!editor.isDestroyed && current.current) editor.view.dispatch(editor.state.tr.setMeta(hoverKey, null));
     };
   }, [editor, sheet]);
 
@@ -165,6 +169,9 @@ export function BlockHandle({ editor, sheet }: { editor: Editor; sheet: RefObjec
       document.body.classList.remove("dragging-block");
       setLineTop(null);
       drag.current = null;
+      current.current = null;
+      setHover(null);
+      if (!editor.isDestroyed) editor.view.dispatch(editor.state.tr.setMeta(hoverKey, null));
       if (!commit || !state.moved || state.target === null) return;
       moveBlock(state.from, state.node, state.target);
     };
@@ -209,10 +216,10 @@ export function BlockHandle({ editor, sheet }: { editor: Editor; sheet: RefObjec
           onMouseEnter={() => hideTimer.current && clearTimeout(hideTimer.current)}
         >
           <i title="Adicionar bloco abaixo" onMouseDown={(e) => e.preventDefault()} onClick={addBelow}>
-            <Plus size={15} strokeWidth={2} />
+            <MI name="plus" size={15} />
           </i>
           <i title="Arraste para mover" onMouseDown={startDrag}>
-            <GripVertical size={15} strokeWidth={2} />
+            <MI name="grip" size={15} />
           </i>
         </div>
       )}

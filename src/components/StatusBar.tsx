@@ -1,7 +1,8 @@
-import { AlertTriangle, Check, Circle, Loader2 } from "lucide-react";
+import { AlertTriangle, Circle, Loader2 } from "lucide-react";
 import { formatNumber } from "../lib/format";
 import { setPrefsAndSave } from "../store/actions";
 import { useApp } from "../store/store";
+import { MI } from "./MockIcons";
 
 export function StatusBar() {
   const tab = useApp((s) => s.tabs.find((t) => t.id === s.activeId));
@@ -36,7 +37,7 @@ export function StatusBar() {
   } else {
     status = (
       <span className="ok">
-        <Check size={13} strokeWidth={2.5} />
+        <MI name="check" size={13} />
         Salvo
       </span>
     );

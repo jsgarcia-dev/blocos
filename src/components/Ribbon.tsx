@@ -1,30 +1,7 @@
 import { useRef, useState } from "react";
 import { useEditorState } from "@tiptap/react";
 import type { Editor } from "@tiptap/core";
-import {
-  Bold,
-  Check,
-  ChevronDown,
-  Download,
-  FileCode,
-  FolderOpen,
-  Highlighter,
-  Image,
-  Italic,
-  Link,
-  List,
-  ListChecks,
-  ListCollapse,
-  ListOrdered,
-  MessageSquare,
-  Printer,
-  Redo2,
-  Save,
-  Strikethrough,
-  Table,
-  Underline,
-  Undo2,
-} from "lucide-react";
+import { Check, FileCode, FolderOpen, Printer, Save } from "lucide-react";
 import { HIGHLIGHT_COLORS, TEXT_COLORS, toHex } from "../lib/colors";
 import { handles } from "../lib/handles";
 import { platform } from "../lib/platform";
@@ -35,7 +12,7 @@ import { insertCallout, insertDetails } from "../editor/blocks";
 import { exportHtml } from "../lib/exporter";
 import { openLinkEditor } from "./Bubbles";
 import { Popover } from "./Popover";
-import { DividerIcon } from "./icons";
+import { MI } from "./MockIcons";
 
 const BLOCK_STYLES = [
   { id: "p", label: "Texto" },
@@ -194,30 +171,30 @@ export function Ribbon() {
     <div className={`ribbon${isTxt ? " is-plain" : ""}`}>
       <div className="grp">
         <RB title="Desfazer (Ctrl+Z)" disabled={!isTxt && !st.canUndo} onClick={undo}>
-          <Undo2 size={17} />
+          <MI name="undo" size={17} />
         </RB>
         <RB title="Refazer (Ctrl+Shift+Z)" disabled={!isTxt && !st.canRedo} onClick={redo}>
-          <Redo2 size={17} />
+          <MI name="redo" size={17} />
         </RB>
       </div>
       <div className="grp">
         <RB className="drop" title="Estilo do texto" disabled={off} btnRef={styleRef} onClick={() => setStyleOpen(!styleOpen)}>
           {isTxt ? "Texto puro" : label}
-          <ChevronDown size={14} />
+          <MI name="chev-d" size={14} />
         </RB>
       </div>
       <div className="grp">
         <RB title="Negrito (Ctrl+B)" on={st.bold} disabled={off} onClick={run((e) => e.chain().focus().toggleBold().run())}>
-          <Bold size={17} />
+          <MI name="bold" size={17} />
         </RB>
         <RB title="Itálico (Ctrl+I)" on={st.italic} disabled={off} onClick={run((e) => e.chain().focus().toggleItalic().run())}>
-          <Italic size={17} />
+          <MI name="italic" size={17} />
         </RB>
         <RB title="Sublinhado (Ctrl+U)" on={st.underline} disabled={off} onClick={run((e) => e.chain().focus().toggleUnderline().run())}>
-          <Underline size={17} />
+          <MI name="underline" size={17} />
         </RB>
         <RB title="Tachado (Ctrl+Shift+S)" on={st.strike} disabled={off} onClick={run((e) => e.chain().focus().toggleStrike().run())}>
-          <Strikethrough size={17} />
+          <MI name="strike" size={17} />
         </RB>
       </div>
       <div className="grp">
@@ -232,48 +209,48 @@ export function Ribbon() {
           disabled={off}
           onClick={() => (st.highlight && toHex(st.highlight) === toHex(lastHl) ? applyHighlight(null) : applyHighlight(lastHl))}
         >
-          <Highlighter size={16} />
+          <MI name="highlighter" size={16} />
           <span className="bar" style={{ background: lastHl }} />
         </RB>
         <RB className="mini" title="Mais cores" disabled={off} btnRef={colorRef} onClick={() => setColorOpen(!colorOpen)}>
-          <ChevronDown size={11} />
+          <MI name="chev-d" size={17} />
         </RB>
       </div>
       <div className="grp">
         <RB title="Lista com marcadores" on={st.bullet} disabled={off} onClick={run((e) => e.chain().focus().toggleBulletList().run())}>
-          <List size={17} />
+          <MI name="list" size={17} />
         </RB>
         <RB title="Lista numerada" on={st.ordered} disabled={off} onClick={run((e) => e.chain().focus().toggleOrderedList().run())}>
-          <ListOrdered size={17} />
+          <MI name="list-ol" size={17} />
         </RB>
         <RB title="Lista de tarefas" on={st.task} disabled={off} onClick={run((e) => e.chain().focus().toggleTaskList().run())}>
-          <ListChecks size={17} />
+          <MI name="checks" size={17} />
         </RB>
       </div>
       <div className="grp last">
         <RB title="Link (Ctrl+K)" on={st.link} disabled={off} onClick={run((e) => openLinkEditor(e))}>
-          <Link size={17} />
+          <MI name="link" size={17} />
         </RB>
         <RB title="Tabela" disabled={off} onClick={run((e) => e.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run())}>
-          <Table size={17} />
+          <MI name="table" size={17} />
         </RB>
         <RB title="Imagem" disabled={off} onClick={() => void insertImageFromDialog()}>
-          <Image size={17} />
+          <MI name="image" size={17} />
         </RB>
         <RB title="Caixa de destaque" on={st.callout} disabled={off} onClick={run((e) => insertCallout(e))}>
-          <MessageSquare size={17} />
+          <MI name="callout" size={17} />
         </RB>
         <RB title="Seção recolhível" on={st.details} disabled={off} onClick={run((e) => insertDetails(e))}>
-          <ListCollapse size={17} />
+          <MI name="collapse" size={17} />
         </RB>
         <RB title="Divisor" disabled={off} onClick={run((e) => e.chain().focus().setHorizontalRule().run())}>
-          <DividerIcon size={17} />
+          <MI name="divider" size={17} />
         </RB>
       </div>
       <RB className="export" title="Salvar e exportar" btnRef={exportRef} onClick={() => setExportOpen(!exportOpen)}>
-        <Download size={14} />
+        <MI name="download" size={14} />
         Exportar
-        <ChevronDown size={14} />
+        <MI name="chev-d" size={14} />
       </RB>
 
       <Popover anchor={styleRef} open={styleOpen} onClose={() => setStyleOpen(false)} className="menu-pop">

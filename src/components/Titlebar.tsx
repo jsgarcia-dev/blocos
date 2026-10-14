@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Copy, FileText, Minus, Plus, Square, X } from "lucide-react";
+import { Copy } from "lucide-react";
 import { platform } from "../lib/platform";
 import { useApp, setState } from "../store/store";
 import { activate, closeOthers, closeTab, moveTab, newTab, tabTitle, togglePin } from "../store/actions";
 import type { Tab } from "../store/types";
+import { MI } from "./MockIcons";
 
 function TabPill({ tab, active }: { tab: Tab; active: boolean }) {
   const pinned = useApp((s) => !!tab.path && s.library.pinned.includes(tab.path));
@@ -56,7 +57,7 @@ function TabPill({ tab, active }: { tab: Tab; active: boolean }) {
         });
       }}
     >
-      <FileText className="ic" size={14} strokeWidth={2} />
+      <MI name="file" size={14} />
       <span className="nm">{tabTitle(tab)}</span>
       {tab.kind === "txt" && <span className="badge">TXT</span>}
       {tab.dirty ? (
@@ -73,7 +74,7 @@ function TabPill({ tab, active }: { tab: Tab; active: boolean }) {
           onMouseDown={(e) => e.stopPropagation()}
           onClick={() => void closeTab(tab.id)}
         >
-          <X size={12} strokeWidth={2} />
+          <MI name="x" size={12} />
         </i>
       )}
     </div>
@@ -112,19 +113,19 @@ export function Titlebar() {
           <TabPill key={t.id} tab={t} active={t.id === activeId} />
         ))}
         <div className="pt add" title="Nova aba (Ctrl+T)" onClick={() => newTab()}>
-          <Plus size={14} strokeWidth={2} />
+          <MI name="plus" size={14} />
         </div>
       </div>
       <div className="drag-fill" data-tauri-drag-region />
       <div className="wc">
         <i title="Minimizar" onClick={() => void platform().windowMinimize()}>
-          <Minus size={11} strokeWidth={2.5} />
+          <MI name="minus" size={11} strokeWidth={2.5} />
         </i>
         <i title={maximized ? "Restaurar" : "Maximizar"} onClick={() => void platform().windowToggleMaximize()}>
-          {maximized ? <Copy size={10} strokeWidth={2.5} /> : <Square size={10} strokeWidth={2.5} />}
+          {maximized ? <Copy size={10} strokeWidth={2.5} /> : <MI name="square" size={11} strokeWidth={2.5} />}
         </i>
         <i className="close" title="Fechar" onClick={() => void platform().windowClose()}>
-          <X size={11} strokeWidth={2.5} />
+          <MI name="x" size={11} strokeWidth={2.5} />
         </i>
       </div>
     </header>
