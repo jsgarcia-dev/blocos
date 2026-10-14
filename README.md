@@ -90,9 +90,18 @@ npm run tauri build    # gera o binário e o pacote .deb
 
 ### Windows
 
-O mesmo código compila no Windows (usa o WebView2 que já vem no Windows 10/11).
-O jeito mais simples é rodar `npm run tauri build` numa máquina Windows ou num
-GitHub Actions com `windows-latest`; o instalador sai em `src-tauri/target/release/bundle/`.
+O instalador para Windows (10/11, x64) é gerado aqui mesmo no Linux, sem `sudo`:
+
+```bash
+./scripts/build-windows.sh
+```
+
+Na primeira vez o script baixa o MinGW-w64 e o NSIS dos repositórios oficiais do
+Ubuntu para `~/.local/opt/blocos-wintools`. O instalador sai em
+`src-tauri/target/x86_64-pc-windows-gnu/release/bundle/nsis/Blocos_0.1.0_x64-setup.exe`.
+Ele usa o WebView2 que já vem no Windows 10/11 (e instala sozinho se faltar).
+
+Também dá para gerar no GitHub Actions (`.github/workflows/build.yml`).
 
 ## Onde ficam os dados do app
 
