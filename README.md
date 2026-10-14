@@ -1,0 +1,102 @@
+# Blocos
+
+Editor de notas moderno para **.md** e **.txt**, feito com **Tauri 2** (Rust) + React + TipTap.
+Roda no Linux e no Windows.
+
+![Blocos](assets/icon.svg)
+
+## O que ele faz
+
+- **Abas** em formato de pílula, com ponto laranja quando há algo não salvo e etiqueta `TXT` para texto puro.
+- **Reabre tudo como você deixou**: abas, aba ativa, posição do cursor e rolagem — inclusive abas novas que nunca foram salvas.
+- **Salva sozinho** logo depois que você para de digitar (dá para desligar nas Preferências).
+- **Formatação** em `.md`: títulos, negrito, itálico, sublinhado, tachado, cor do texto, **destaque colorido**, listas, lista de tarefas, links, tabelas, imagens, citação, código, divisor.
+- **Digite `/`** para inserir blocos: tabela, lista de tarefas, **seção recolhível**, **caixa de destaque**, títulos…
+- **Alça à esquerda de cada bloco**: `+` adiciona um bloco abaixo, `⋮⋮` arrasta o bloco para outro lugar (uma linha laranja mostra onde ele vai entrar; Esc cancela).
+- **Seções recolhíveis** com contador de itens — ótimo para grupos de registros.
+- **Selos abaixo do título** (H1): quando foi editado, quantos grupos e quantos registros.
+- **Lateral**: busca em tudo, "Continuar de onde parou", fixados, recentes e pastas.
+- **Busca geral (Ctrl+P)** nos nomes e no conteúdo de todos os `.md`/`.txt` das suas pastas (ignora acentos).
+- **Localizar e substituir (Ctrl+F / Ctrl+H)**.
+- **Texto puro (.txt)** fica texto puro, com botão **Converter para .md** (cria um `.md` ao lado e mantém o `.txt`).
+- **Não reescreve o que você não mexeu**: ao salvar um `.md`, cada bloco que você não editou é gravado exatamente como estava no arquivo (mesmos marcadores de lista, linhas em branco, espaços, definições de link). Só os blocos editados são reescritos.
+- **Preserva o arquivo**: codificação (UTF-8, UTF-8 com BOM, Windows-1252/Latin-1, UTF-16) e quebras de linha (LF/CRLF).
+- **Nunca grava por cima de mudanças de fora**: se o arquivo mudar no disco enquanto está aberto (Dropbox, Syncthing, outro programa), o salvamento automático para e um aviso pergunta qual versão manter.
+- **Cópia de segurança**: antes de sobrescrever um arquivo pela primeira vez em cada sessão, a versão anterior vai para a pasta de backups (guardada por 30 dias).
+- **Percebe mudanças feitas fora do app** e recarrega (ou pergunta, se você também mudou).
+- **Exportar** como HTML e **imprimir/salvar PDF**.
+- Tema **claro**, **escuro** ou do sistema; zoom do texto.
+- Abre arquivos com **dois cliques** no gerenciador de arquivos; um segundo arquivo abre como nova aba na mesma janela.
+
+## Como o Markdown é gravado
+
+| No editor | No arquivo `.md` |
+| --- | --- |
+| Destaque amarelo | `==texto==` |
+| Destaque de outra cor | `<mark style="background-color: #C3F0C8">texto</mark>` |
+| Cor do texto | `<span style="color: #E5484D">texto</span>` |
+| Sublinhado | `<u>texto</u>` |
+| Caixa de destaque | `> [!NOTE]` (alerta do GitHub) |
+| Seção recolhível | `<details><summary>…</summary> … </details>` |
+| Lista de tarefas | `- [ ] item` / `- [x] item` |
+| Quebra de linha simples | uma quebra de linha comum |
+
+Tudo continua legível em qualquer editor de texto, no GitHub e no Obsidian.
+Texto entre `< >` que não é uma dessas tags (ex.: `<nome do cliente>`, `<!-- nota -->`) aparece e é gravado como texto comum.
+
+Fidelidade ao design aprovado: veja [docs/fidelidade.md](docs/fidelidade.md).
+
+## Atalhos
+
+| Atalho | Ação |
+| --- | --- |
+| Ctrl+T / Ctrl+N | Nova aba |
+| Ctrl+O | Abrir arquivo |
+| Ctrl+S / Ctrl+Shift+S | Salvar / Salvar como |
+| Ctrl+W | Fechar aba |
+| Ctrl+Shift+T | Reabrir aba fechada |
+| Ctrl+Tab / Ctrl+Shift+Tab | Próxima / anterior aba |
+| Ctrl+1…9 | Ir para a aba |
+| Ctrl+P | Buscar em tudo |
+| Ctrl+F / Ctrl+H | Localizar / Substituir |
+| Ctrl+K | Link |
+| Ctrl+B / I / U | Negrito / Itálico / Sublinhado |
+| Ctrl+Shift+H | Destacar |
+| Ctrl+Shift+P | Imprimir / PDF |
+| Ctrl+= / Ctrl+- / Ctrl+0 | Zoom |
+| Ctrl+\ | Mostrar/esconder a lateral |
+| Ctrl+, | Preferências |
+
+## Desenvolvimento
+
+Pré-requisitos no Linux (Debian/Ubuntu/Mint):
+
+```bash
+sudo apt install libwebkit2gtk-4.1-dev libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev libgtk-3-dev build-essential
+```
+
+E o Rust (https://rustup.rs) + Node.js 20+.
+
+```bash
+npm install
+npm run tauri dev      # app em modo desenvolvimento
+npm test               # testes do Markdown
+cd src-tauri && cargo test   # testes do backend em Rust
+npm run tauri build    # gera o binário e o pacote .deb
+./scripts/instalar.sh  # instala para o seu usuário (~/.local) e define como app padrão
+```
+
+`npm run dev` sozinho abre a interface num navegador comum com arquivos de demonstração.
+
+### Windows
+
+O mesmo código compila no Windows (usa o WebView2 que já vem no Windows 10/11).
+O jeito mais simples é rodar `npm run tauri build` numa máquina Windows ou num
+GitHub Actions com `windows-latest`; o instalador sai em `src-tauri/target/release/bundle/`.
+
+## Onde ficam os dados do app
+
+- Linux: `~/.local/share/br.blocos.editor/` (`sessao.json`, `biblioteca.json`, `backups/`, `imagens/`)
+- Windows: `%APPDATA%\br.blocos.editor\`
+
+Imagens coladas num documento salvo vão para a pasta `imagens/` ao lado do arquivo.

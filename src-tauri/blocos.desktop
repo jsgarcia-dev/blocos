@@ -1,0 +1,13 @@
+[Desktop Entry]
+Categories={{categories}};TextEditor;
+Comment={{comment}}
+Exec={{exec}} %F
+StartupWMClass={{exec}}
+Icon={{icon}}
+Name={{name}}
+GenericName=Editor de notas
+Keywords=markdown;notas;texto;editor;md;txt;
+Terminal=false
+Type=Application
+StartupNotify=true
+MimeType=text/markdown;text/x-markdown;text/plain;

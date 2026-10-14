@@ -1,0 +1,656 @@
+/* ==========================================================
+   Conteúdo do documento (editor e exportação HTML)
+   ========================================================== */
+
+.doc {
+  outline: none;
+  font-family: var(--font, "Bricolage Grotesque", sans-serif);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink2);
+  caret-color: var(--ac);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-variant-ligatures: none;
+}
+
+.doc ::selection {
+  background: rgba(255, 90, 31, 0.2);
+}
+
+.doc > * + * {
+  margin-top: 0;
+}
+
+.doc p {
+  padding: 3px 0;
+  min-height: 1.55em;
+}
+
+.doc h1 {
+  font: 800 36px/1.05 var(--font);
+  letter-spacing: -0.035em;
+  margin: 0 0 10px;
+  color: var(--ink);
+}
+
+.doc h2 {
+  font: 700 21px/1.25 var(--font);
+  letter-spacing: -0.015em;
+  margin: 16px 0 6px;
+  padding-top: 2px;
+  color: var(--ink);
+}
+
+.doc h3 {
+  font: 700 16px/1.25 var(--font);
+  margin: 18px 0 6px;
+  color: var(--ink);
+}
+
+.doc h4,
+.doc h5,
+.doc h6 {
+  font: 700 15px/1.3 var(--font);
+  margin: 14px 0 4px;
+  color: var(--ink);
+}
+
+.doc h5,
+.doc h6 {
+  font-size: 14px;
+  color: var(--ink2);
+}
+
+.doc h1 + h2 {
+  margin-top: 10px;
+}
+
+.doc .dim {
+  color: var(--mu);
+  font-weight: 500;
+}
+
+.doc strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.doc a,
+.doc .lnk {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 90, 31, 0.55);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  cursor: text;
+}
+
+.doc code {
+  font: 600 12.5px var(--mono, monospace);
+  color: var(--ink);
+  background: var(--chip);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.doc mark {
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: #17171a;
+  background: #ffe066;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.doc mark[data-color] {
+  color: #17171a !important;
+}
+
+/* listas */
+.doc ul,
+.doc ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.doc li {
+  position: relative;
+  padding: 3px 0 3px 22px;
+  line-height: 1.55;
+}
+
+.doc li > p {
+  padding: 0;
+}
+
+.doc ul:not([data-type="taskList"]) > li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+.doc ul ul:not([data-type="taskList"]) > li::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--mu);
+}
+
+.doc ol {
+  counter-reset: item;
+}
+
+.doc ol > li {
+  counter-increment: item;
+  padding-left: 26px;
+}
+
+.doc ol > li::before {
+  content: counter(item) ".";
+  position: absolute;
+  left: 2px;
+  top: 3px;
+  color: var(--mu);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.doc ol[start] {
+  counter-reset: none;
+}
+
+/* tarefas */
+.doc ul[data-type="taskList"] > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding-left: 2px;
+}
+
+.doc ul[data-type="taskList"] > li > label {
+  flex-shrink: 0;
+  margin-top: 4px;
+  user-select: none;
+  display: flex;
+}
+
+.doc ul[data-type="taskList"] > li > label > span {
+  display: none;
+}
+
+.doc ul[data-type="taskList"] input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 17px;
+  height: 17px;
+  border-radius: 5px;
+  border: 1.5px solid #b9b9c2;
+  background: var(--page, #fff);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.doc ul[data-type="taskList"] input[type="checkbox"]:checked {
+  background: var(--ac);
+  border-color: var(--ac);
+}
+
+.doc ul[data-type="taskList"] input[type="checkbox"]:checked::after {
+  content: "";
+  width: 9px;
+  height: 5px;
+  border: solid #fff;
+  border-width: 0 0 2.2px 2.2px;
+  transform: translateY(-1px) rotate(-45deg);
+}
+
+.doc ul[data-type="taskList"] > li > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc ul[data-type="taskList"] > li[data-checked="true"] > div {
+  color: var(--mu);
+  text-decoration: line-through;
+  text-decoration-color: var(--mu);
+}
+
+/* selos abaixo do título */
+.doc .doc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 6px;
+  user-select: none;
+  white-space: normal;
+}
+
+.doc .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: var(--chip);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink2);
+}
+
+.doc .chip .ic {
+  width: 12px;
+  height: 12px;
+}
+
+/* seções recolhíveis */
+.doc .toggle-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--ln);
+  position: relative;
+  background: var(--page, #fff);
+}
+
+.doc .toggle-block + .toggle-block {
+  margin-top: 8px;
+}
+
+.doc .toggle-btn {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  color: var(--mu);
+  flex-shrink: 0;
+  transition: transform 0.15s, background 0.12s;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.doc .toggle-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.doc .toggle-btn:hover {
+  background: var(--chip);
+  color: var(--ink);
+}
+
+.doc .toggle-block.is-open > .toggle-btn {
+  transform: rotate(90deg);
+}
+
+.doc .toggle-block > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc .toggle-block summary {
+  display: block;
+  list-style: none;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  padding-right: 76px;
+  cursor: text;
+}
+
+.doc .toggle-block summary::-webkit-details-marker {
+  display: none;
+}
+
+.doc .toggle-block[data-count]:not([data-count=""])::after {
+  content: attr(data-count);
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--mu);
+  font-weight: 500;
+  background: var(--chip);
+  padding: 2px 9px;
+  border-radius: 99px;
+  pointer-events: none;
+}
+
+.doc [data-type="detailsContent"] {
+  margin-top: 6px;
+}
+
+.doc [data-type="detailsContent"][hidden] {
+  display: none;
+}
+
+/* caixa de destaque */
+.doc .callout {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 11px 14px;
+  border-radius: 12px;
+  background: var(--acs);
+  color: #7c2d0e;
+  font-size: 13.5px;
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+:root[data-theme="escuro"] .doc .callout {
+  color: #ffc4a8;
+}
+
+.doc .callout + * {
+  margin-top: 8px;
+}
+
+.doc .callout-icon {
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  background: var(--ac);
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 16v-4'/><path d='M12 8h.01'/></svg>") center / contain no-repeat;
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><path d='M12 16v-4'/><path d='M12 8h.01'/></svg>") center / contain no-repeat;
+}
+
+.doc .callout-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.doc .callout-body p {
+  padding: 0;
+  min-height: 0;
+}
+
+.doc .callout strong {
+  color: inherit;
+}
+
+.doc .callout[data-variant="tip"] {
+  background: #e6f6ea;
+  color: #1b5e2b;
+}
+
+.doc .callout[data-variant="tip"] .callout-icon {
+  background: #2f9e44;
+}
+
+.doc .callout[data-variant="warning"] {
+  background: #fff4d6;
+  color: #7a5200;
+}
+
+.doc .callout[data-variant="warning"] .callout-icon {
+  background: #f08c00;
+}
+
+.doc .callout[data-variant="caution"] {
+  background: #ffe3e3;
+  color: #7d1a1a;
+}
+
+.doc .callout[data-variant="caution"] .callout-icon {
+  background: #e03131;
+}
+
+.doc .callout[data-variant="important"] {
+  background: #efe9ff;
+  color: #3f2a87;
+}
+
+.doc .callout[data-variant="important"] .callout-icon {
+  background: #7048e8;
+}
+
+/* citação, código, divisor */
+.doc blockquote {
+  border-left: 3px solid var(--ln);
+  padding: 2px 0 2px 14px;
+  margin: 8px 0;
+  color: var(--ink2);
+  font-style: italic;
+}
+
+.doc pre {
+  background: var(--code-bg, #1f1f23);
+  color: #e4e4e7;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.doc pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  font: 400 13px/1.6 var(--mono, monospace);
+}
+
+.doc hr {
+  border: 0;
+  border-top: 1px solid var(--ln);
+  margin: 18px 0;
+}
+
+.doc hr.ProseMirror-selectednode {
+  border-top-color: var(--ac);
+}
+
+/* imagens */
+.doc .image-block,
+.doc img {
+  display: block;
+  max-width: 100%;
+  margin: 10px 0;
+}
+
+.doc .image-block img {
+  margin: 0;
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+}
+
+.doc .image-block.ProseMirror-selectednode img {
+  outline: 2px solid var(--ac);
+  outline-offset: 2px;
+}
+
+/* tabelas */
+.doc .tableWrapper {
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.doc table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  table-layout: fixed;
+  border: 1px solid var(--ln);
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+.doc th,
+.doc td {
+  border-right: 1px solid var(--ln);
+  border-bottom: 1px solid var(--ln);
+  padding: 7px 10px;
+  vertical-align: top;
+  text-align: left;
+  position: relative;
+}
+
+.doc tr > *:last-child {
+  border-right: 0;
+}
+
+.doc tr:last-child > * {
+  border-bottom: 0;
+}
+
+.doc th {
+  background: var(--hover, #faf8f4);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.doc th p,
+.doc td p {
+  padding: 0;
+  min-height: 0;
+}
+
+.doc .selectedCell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 90, 31, 0.1);
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------- só no editor */
+.ProseMirror p.is-empty::before,
+.ProseMirror h1.is-empty::before,
+.ProseMirror h2.is-empty::before,
+.ProseMirror h3.is-empty::before,
+.ProseMirror summary.is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: #c4c4ca;
+}
+
+:root[data-theme="escuro"] .ProseMirror .is-empty::before {
+  color: #4a4a52;
+}
+
+.ProseMirror .slash-query {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ProseMirror .slash-query.is-empty::after {
+  content: attr(data-decoration-content);
+  color: #c4c4ca;
+  font-weight: 400;
+  margin-left: 4px;
+  pointer-events: none;
+}
+
+.ProseMirror .search-match {
+  background: rgba(255, 212, 59, 0.55);
+  border-radius: 3px;
+}
+
+.ProseMirror .search-match.current {
+  background: #ff8b3d;
+  color: #fff;
+}
+
+.ProseMirror > .is-hovered {
+  background: var(--hover);
+  border-radius: 8px;
+  box-shadow: 0 0 0 4px var(--hover), -6px 0 0 4px var(--hover), 6px 0 0 4px var(--hover);
+}
+
+.ProseMirror > .toggle-block.is-hovered,
+.ProseMirror > .callout.is-hovered,
+.ProseMirror > .tableWrapper.is-hovered {
+  box-shadow: none;
+}
+
+.ProseMirror-gapcursor:after {
+  border-top-color: var(--ac);
+}
+
+/* alça de arrastar (fica fora do conteúdo, à esquerda) */
+.block-handle {
+  position: absolute;
+  left: 16px;
+  display: flex;
+  gap: 2px;
+  color: #a8a8b0;
+  z-index: 10;
+  margin-top: 1px;
+  animation: fade 0.12s ease-out;
+  user-select: none;
+}
+
+.block-handle i {
+  width: 22px;
+  height: 26px;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.block-handle i:last-child {
+  background: #f1efea;
+  cursor: grab;
+}
+
+:root[data-theme="escuro"] .block-handle i:last-child {
+  background: #26262c;
+}
+
+.block-handle i:hover {
+  color: var(--ink);
+  background: var(--chip);
+}
+
+.drop-line {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  height: 3px;
+  margin-top: -1px;
+  border-radius: 3px;
+  background: var(--ac);
+  box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.15);
+  z-index: 11;
+  pointer-events: none;
+}
+
+.ProseMirror > .is-dragging {
+  opacity: 0.35;
+}
+
+body.dragging-block,
+body.dragging-block * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+
+.ProseMirror-selectednode {
+  outline: none;
+}
