@@ -18,11 +18,32 @@ export interface MenuHandle {
 
 const SlashMenu = forwardRef<MenuHandle, MenuProps>(({ items, command }, ref) => {
   const [index, setIndex] = useState(0);
+  const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   useEffect(() => setIndex(0), [items]);
+  // a lista não tem rolagem nativa (veja o CSS): só ela rola, sem mexer na página
   useEffect(() => {
-    listRef.current?.querySelector<HTMLElement>(`[data-i="${index}"]`)?.scrollIntoView({ block: "nearest" });
-  }, [index]);
+    const list = listRef.current;
+    const el = list?.querySelector<HTMLElement>(`[data-i="${index}"]`);
+    if (!list || !el) return;
+    if (el.offsetTop < list.scrollTop) list.scrollTop = el.offsetTop;
+    else if (el.offsetTop + el.offsetHeight > list.scrollTop + list.clientHeight) {
+      list.scrollTop = el.offsetTop + el.offsetHeight - list.clientHeight;
+    }
+  }, [index, items]);
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const onWheel = (e: WheelEvent) => {
+      const list = listRef.current;
+      if (!list) return;
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? list.clientHeight : 1;
+      list.scrollTop += e.deltaY * unit;
+    };
+    root.addEventListener("wheel", onWheel, { passive: false });
+    return () => root.removeEventListener("wheel", onWheel);
+  }, []);
 
   useImperativeHandle(ref, () => ({
     onKeyDown: (e) => {
@@ -41,7 +62,7 @@ const SlashMenu = forwardRef<MenuHandle, MenuProps>(({ items, command }, ref) =>
   }));
 
   return (
-    <div className="slash" onMouseDown={(e) => e.preventDefault()}>
+    <div className="slash" ref={rootRef} onMouseDown={(e) => e.preventDefault()}>
       <div className="hd">INSERIR BLOCO</div>
       {items.length ? (
         <div className="opts" ref={listRef}>
@@ -92,7 +113,8 @@ export const SlashCommand = Extension.create({
         decorationContent: "Filtrar blocos…",
         decorationEmptyClass: "is-empty",
         placement: "bottom-start",
-        offset: { mainAxis: 3, crossAxis: 0 },
+        offset: { mainAxis: 4, crossAxis: 0 },
+        container: ".pane.active .sheet",
         items: ({ query }) => filterBlocks(query),
         allow: ({ state, range }) => {
           const $from = state.doc.resolve(range.from);
@@ -118,18 +140,22 @@ export const SlashCommand = Extension.create({
                 draw(props);
                 const host = el;
                 // como no mock: alinhado à esquerda da linha, 4px abaixo dela (ou acima, se não couber)
+                // o menu fica dentro da página (como no mock): rola junto com o texto
                 const place = () => {
                   const line = props.editor.view.dom.querySelector(".slash-query")?.closest("p, li, h1, h2, h3, td, th, summary") as HTMLElement | null;
-                  if (!line) return;
+                  const sheet = host.parentElement;
+                  if (!line || !sheet) return;
                   const r = line.getBoundingClientRect();
+                  const s = sheet.getBoundingClientRect();
+                  const zoom = sheet.offsetWidth ? s.width / sheet.offsetWidth : 1;
                   const area = (line.closest(".canvas") as HTMLElement | null)?.getBoundingClientRect();
                   const bottom = area ? area.bottom : window.innerHeight;
                   const topLimit = area ? area.top : 0;
-                  const h = host.offsetHeight;
-                  const below = r.bottom + 4;
+                  const h = host.offsetHeight * zoom;
                   // abre embaixo; só sobe se faltar bastante espaço e couber em cima
-                  const top = below + h > bottom + 12 && r.top - 4 - h >= topLimit ? r.top - 4 - h : below;
-                  Object.assign(host.style, { position: "absolute", left: `${r.left}px`, top: `${top}px` });
+                  const up = r.bottom + 4 * zoom + h > bottom + 12 && r.top - 4 * zoom - h >= topLimit;
+                  const top = up ? (r.top - s.top) / zoom - 4 - host.offsetHeight : (r.bottom - s.top) / zoom + 4;
+                  Object.assign(host.style, { position: "absolute", left: `${(r.left - s.left) / zoom}px`, top: `${top}px` });
                 };
                 unmount = props.mount(el, { onPosition: place });
                 requestAnimationFrame(place);

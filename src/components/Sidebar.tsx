@@ -156,9 +156,8 @@ export function Sidebar() {
               Continuar de onde parou
             </div>
             <b>{basename(last.path)}</b>
-            <span>
-              Linha {last.line} · {formatAgo(last.at)}
-            </span>
+            {/* um só texto: o navegador não ajusta o espaço entre letras de nós de texto diferentes */}
+            <span>{`Linha ${last.line} · ${formatAgo(last.at)}`}</span>
           </button>
         )}
 

@@ -47,7 +47,10 @@ export const DocMeta = Extension.create<DocMetaOptions>({
                   if (i < offset + len) start = pos + 1 + childOffset + (i - offset);
                   offset += len;
                 });
-                if (start >= 0) dims.push(Decoration.inline(start, pos + n.nodeSize - 1, { class: "dim" }));
+                if (start >= 0) {
+                  dims.push(Decoration.inline(start, pos + n.nodeSize - 1, { class: "dim" }));
+                  if (n.type.name === "detailsSummary") dims.push(Decoration.inline(start - 1, start, { class: "dim-gap" }));
+                }
               }
               return false;
             });

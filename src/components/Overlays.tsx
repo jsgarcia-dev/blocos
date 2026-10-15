@@ -173,7 +173,7 @@ export function Preferences() {
             <button onClick={() => setPrefsAndSave({ zoom: Math.max(70, prefs.zoom - 10) })}>
               <Minus size={14} />
             </button>
-            <span>{prefs.zoom}%</span>
+            <span>{`${prefs.zoom}%`}</span>
             <button onClick={() => setPrefsAndSave({ zoom: Math.min(200, prefs.zoom + 10) })}>
               <Plus size={14} />
             </button>

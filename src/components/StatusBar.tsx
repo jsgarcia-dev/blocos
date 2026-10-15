@@ -45,16 +45,15 @@ export function StatusBar() {
 
   return (
     <footer className="sbar">
-      <span>
-        {formatNumber(words)} {words === 1 ? "palavra" : "palavras"}
-      </span>
-      {words > 0 && <span>~{minutes} min de leitura</span>}
+      {/* cada texto em um só nó: o navegador não ajusta o espaço entre letras de nós diferentes */}
+      <span>{`${formatNumber(words)} ${words === 1 ? "palavra" : "palavras"}`}</span>
+      {words > 0 && <span>{`~${minutes} min de leitura`}</span>}
       <span className="r">{status}</span>
       <span title={tab.kind === "txt" ? `Codificação: ${tab.encoding.toUpperCase()}` : undefined}>
         {tab.kind === "txt" ? `Texto puro · ${tab.encoding.toUpperCase()}` : "Markdown"}
       </span>
       <button className="zoom" title="Tamanho do texto (Ctrl + / Ctrl − / Ctrl 0)" onClick={() => setPrefsAndSave({ zoom: 100 })}>
-        {zoom}%
+        {`${zoom}%`}
       </button>
     </footer>
   );

@@ -210,7 +210,8 @@ export function Ribbon() {
           onClick={() => (st.highlight && toHex(st.highlight) === toHex(lastHl) ? applyHighlight(null) : applyHighlight(lastHl))}
         >
           <MI name="highlighter" size={16} />
-          <span className="bar" style={{ background: lastHl }} />
+          {/* no mock o amarelo padrão aparece mais vivo na barrinha (#FFD43B) */}
+          <span className="bar" style={{ background: toHex(lastHl) === "#FFE066" ? "#FFD43B" : lastHl }} />
         </RB>
         <RB className="mini" title="Mais cores" disabled={off} btnRef={colorRef} onClick={() => setColorOpen(!colorOpen)}>
           <MI name="chev-d" size={17} />

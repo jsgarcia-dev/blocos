@@ -7,7 +7,10 @@ d = ImageChops.difference(a, b).convert("L")
 mask = d.point(lambda v: 255 if v > 40 else 0)
 px = mask.load()
 total = sum(1 for y in range(h) for x in range(w) if px[x, y])
-print(f"pixels diferentes: {total} de {w*h} ({100*total/(w*h):.2f}%)")
+print(f"pixels diferentes (mais de 40 de 255): {total} de {w*h} ({100*total/(w*h):.2f}%)")
+dpx = d.load()
+faint = sum(1 for y in range(h) for x in range(w) if dpx[x, y] > 10)
+print(f"diferenças leves (mais de 10 de 255): {faint}")
 # regiões: grade de 20px com algum pixel diferente, agrupadas
 cell = 20
 cells = set()

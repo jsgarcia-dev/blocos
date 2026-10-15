@@ -24,8 +24,9 @@
   --code-bg: #1f1f23;
   --ok: #2f9e44;
   --err: #e03131;
-  --font: "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  /* mesmas listas do mock: um caractere que a fonte não tem ("·", "~") cai na mesma fonte reserva */
+  --font: "Bricolage Grotesque", sans-serif;
+  --mono: "IBM Plex Mono", monospace;
   color-scheme: light;
 }
 
@@ -65,7 +66,6 @@ body {
   /* mesma altura de linha do mock */
   line-height: 1.5;
   color: var(--ink);
-  -webkit-font-smoothing: antialiased;
   user-select: none;
 }
 
@@ -102,10 +102,15 @@ kbd {
   /* a janela não tem moldura do sistema: os cantos arredondados são os do mock */
   border-radius: 14px;
   overflow: hidden;
+  /* contorno de 1px e sombra da janela do mock: aparecem só nos cantos arredondados */
+  box-shadow:
+    0 40px 80px -30px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .app.maximized {
   border-radius: 0;
+  box-shadow: none;
 }
 
 .amain {
@@ -347,8 +352,9 @@ kbd {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 0 -6px;
-  padding: 0 6px;
+  /* ocupa a largura toda da lateral: a sombra do cartão "Continuar" não é cortada (como no mock) */
+  margin: 0 -12px;
+  padding: 0 12px;
   scrollbar-width: thin;
   scrollbar-color: #2a2a30 transparent;
 }
@@ -368,6 +374,10 @@ kbd {
 .resume:hover {
   transform: translateY(-1px);
   box-shadow: 0 16px 30px -12px rgba(255, 90, 31, 0.9);
+}
+
+.resume .rt .ic {
+  flex-shrink: 0;
 }
 
 .resume .rt {
@@ -466,6 +476,9 @@ kbd {
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+  /* 1px a mais de área visível: o corte não come a borda suavizada da última letra */
+  padding-right: 1px;
+  margin-right: -1px;
 }
 
 .it.on {
@@ -540,12 +553,13 @@ kbd {
 }
 
 /* ---------------------------------------------------------- área de trabalho */
+/* sem fundo próprio (como no mock): o fundo é o da janela (.app). Um fundo repetido aqui
+   deixaria a borda arredondada do canto mais clara, pois o recorte suavizado se soma a cada camada */
 .work {
   flex: 1;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  background: var(--cv);
 }
 
 .ribbon {
@@ -695,7 +709,6 @@ kbd {
   background-color: var(--cv);
   background-image: radial-gradient(circle, var(--dots) 1px, transparent 1.3px);
   background-size: 18px 18px;
-  background-attachment: local;
   /* a barra de rolagem não pode descentralizar a página */
   scrollbar-gutter: stable both-edges;
   display: flex;
@@ -704,20 +717,23 @@ kbd {
   scrollbar-color: rgba(120, 120, 130, 0.35) transparent;
 }
 
+/* o texto fica direto no fundo da área de edição, sem cartão branco (pedido do usuário);
+   a coluna continua com largura confortável de leitura */
 .sheet {
   width: 740px;
   max-width: calc(100% - 32px);
   min-height: 100%;
   height: max-content;
-  background: var(--page);
-  border-radius: 16px 16px 0 0;
   padding: 28px 66px 160px;
-  box-shadow:
-    0 0 0 1px var(--ln),
-    0 24px 60px -30px rgba(23, 23, 26, 0.35);
   position: relative;
   zoom: var(--zoom, 1);
   user-select: text;
+  /* selos e código um tom abaixo do fundo bege (o tom antigo sumia nele) */
+  --chip: #e9e6de;
+}
+
+:root[data-theme="escuro"] .sheet {
+  --chip: #26262c;
 }
 
 /* ---------------------------------------------------------- texto puro */
@@ -1071,14 +1087,12 @@ kbd {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
-  /* duas linhas visíveis, como no mock; o resto aparece rolando ou filtrando */
-  max-height: 103.5px;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.slash .opts::-webkit-scrollbar {
-  display: none;
+  /* duas linhas visíveis (2 × 50,6875px + 2px de espaço), como no mock; o resto aparece
+     rolando ou filtrando. A rolagem é feita no código (roda do mouse e setas): uma área
+     rolável nativa faz o navegador desenhar o texto do menu sem a suavização colorida */
+  max-height: 103.375px;
+  overflow: hidden;
+  position: relative;
 }
 
 .slash .opt {
