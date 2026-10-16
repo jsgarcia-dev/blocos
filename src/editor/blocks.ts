@@ -24,18 +24,20 @@ export function insertDetails(editor: Editor, range?: Range) {
     .insertContent({
       type: "details",
       content: [
-        { type: "detailsSummary", content: [{ type: "text", text: "Nova seção" }] },
+        { type: "detailsSummary" },
         { type: "detailsContent", content: [{ type: "bulletList", content: [{ type: "listItem", content: [{ type: "paragraph" }] }] }] },
       ],
     })
     .run();
-  // abre a seção recém-criada para já poder digitar dentro
+  // abre a seção recém-criada e põe o cursor no nome do grupo (ex.: o banco)
   requestAnimationFrame(() => {
     const { $from } = editor.state.selection;
     for (let d = $from.depth; d > 0; d--) {
       if ($from.node(d).type.name === "details") {
-        const dom = editor.view.nodeDOM($from.before(d)) as HTMLElement | null;
+        const start = $from.before(d);
+        const dom = editor.view.nodeDOM(start) as HTMLElement | null;
         if (dom && !dom.classList.contains("is-open")) dom.querySelector<HTMLButtonElement>(".toggle-btn")?.click();
+        editor.chain().focus().setTextSelection(start + 2).run();
         break;
       }
     }
@@ -58,7 +60,7 @@ export const BLOCKS: BlockItem[] = [
   { id: "h3", title: "Título 3", description: "Subtítulo", keywords: "titulo heading h3 subtitulo", icon: Heading3, run: (e, r) => chain(e, r).setHeading({ level: 3 }).run() },
   { id: "tabela", title: "Tabela", description: "Linhas e colunas", keywords: "tabela table grade colunas", icon: mockIcon("table"), run: (e, r) => chain(e, r).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run() },
   { id: "tarefas", title: "Lista de tarefas", description: "Caixinhas para marcar", keywords: "tarefas todo checklist caixa", icon: mockIcon("checks"), run: (e, r) => chain(e, r).toggleTaskList().run() },
-  { id: "recolhivel", title: "Seção recolhível", description: "Esconde um grupo de itens", keywords: "recolhivel secao toggle details grupo esconder", icon: mockIcon("collapse"), run: (e, r) => insertDetails(e, r) },
+  { id: "recolhivel", title: "Seção recolhível", description: "Grupo de registros que abre e fecha", keywords: "recolhivel secao toggle details grupo esconder", icon: mockIcon("collapse"), run: (e, r) => insertDetails(e, r) },
   { id: "destaque", title: "Caixa de destaque", description: "Para avisos e lembretes", keywords: "destaque callout aviso nota lembrete", icon: mockIcon("callout"), run: (e, r) => insertCallout(e, r) },
   { id: "marcadores", title: "Lista com marcadores", description: "Itens com bolinha", keywords: "lista marcadores bullet", icon: mockIcon("list"), run: (e, r) => chain(e, r).toggleBulletList().run() },
   { id: "numerada", title: "Lista numerada", description: "Itens em ordem", keywords: "lista numerada ordenada numeros", icon: mockIcon("list-ol"), run: (e, r) => chain(e, r).toggleOrderedList().run() },

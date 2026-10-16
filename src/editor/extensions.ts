@@ -5,6 +5,7 @@ import { DocMeta } from "./DocMeta";
 import { SlashCommand } from "./SlashCommand";
 import { SearchHighlight } from "./SearchHighlight";
 import { FatCaret } from "./FatCaret";
+import { Registros } from "./Registros";
 import { platform } from "../lib/platform";
 import { dirname, isAbsolute, joinPath } from "../lib/paths";
 
@@ -35,9 +36,14 @@ export function buildExtensions(o: BuildOptions): AnyExtension[] {
       includeChildren: true,
       placeholder: ({ node, editor, pos }) => {
         if (node.type.name === "heading") return node.attrs.level === 1 && pos === 0 ? "Título" : `Título ${node.attrs.level}`;
-        if (node.type.name === "detailsSummary") return "Nome da seção";
+        if (node.type.name === "detailsSummary") return "Nome do grupo (ex.: banco)";
         if (node.type.name !== "paragraph") return "";
-        const parent = editor.state.doc.resolve(pos).parent.type.name;
+        const $pos = editor.state.doc.resolve(pos);
+        const parent = $pos.parent.type.name;
+        // linha de registro dentro de uma seção recolhível
+        if (parent === "listItem" && Array.from({ length: $pos.depth }, (_, i) => $pos.node(i + 1).type.name).includes("detailsContent")) {
+          return "Número  Nome completo  CPF";
+        }
         return ["doc", "detailsContent", "callout"].includes(parent) ? "Digite “/” para inserir blocos…" : "";
       },
     }),
@@ -45,5 +51,6 @@ export function buildExtensions(o: BuildOptions): AnyExtension[] {
     SlashCommand,
     SearchHighlight.configure({ onChange: o.onSearch }),
     FatCaret,
+    Registros,
   ];
 }

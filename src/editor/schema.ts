@@ -9,6 +9,7 @@ import { Details, DetailsSummary, DetailsContent } from "@tiptap/extension-detai
 import type { Node as PMNode } from "@tiptap/pm/model";
 import { Callout } from "./Callout";
 import { BlocosImage } from "./BlocosImage";
+import { hasRecords } from "./Registros";
 
 export interface SchemaOptions {
   resolveImageSrc?: (src: string) => string;
@@ -24,8 +25,8 @@ export function countItems(node: PMNode): number {
   return n;
 }
 
-const CHEVRON =
-  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>';
+/* triângulo ▸ (vira ▾ quando a seção abre), como na opção A do mock de registros */
+const CHEVRON = '<svg viewBox="0 0 24 24"><path d="M9 6.5 16.5 12 9 17.5Z" fill="currentColor"/></svg>';
 
 /* Guardam o marcador usado no arquivo, para regravar igual (- * +, 1. 1), ``` ~~~). */
 const BlocosBulletList = BulletList.extend({
@@ -102,7 +103,9 @@ export function schemaExtensions(opts: SchemaOptions = {}): AnyExtension[] {
         const wrapper = element.parentElement;
         if (wrapper) {
           const n = countItems(node);
-          wrapper.setAttribute("data-count", n ? `${n} ${n === 1 ? "item" : "itens"}` : "");
+          // com números (telefone, CPF…) os itens são registros
+          const [um, varios] = hasRecords(node) ? ["registro", "registros"] : ["item", "itens"];
+          wrapper.setAttribute("data-count", n ? `${n} ${n === 1 ? um : varios}` : "");
         }
       },
     }),

@@ -307,6 +307,27 @@
   transform: rotate(90deg);
 }
 
+/* registros dentro das seções (opção A): números longos com o destaque cinza e um "·" antes do
+   último; só aparência (Registros.ts), o texto salvo continua o que foi digitado */
+.doc .reg-num {
+  font: 600 12.5px var(--mono, monospace);
+  color: var(--ink);
+  background: var(--chip);
+  padding: 1px 6px;
+  border-radius: 5px;
+}
+
+.doc .reg-dot {
+  color: var(--mu);
+  margin-right: 0.4em;
+  user-select: none;
+}
+
+/* marcadores redondos nas listas das seções, como no mock */
+.doc .toggle-block ul:not([data-type="taskList"]) > li::before {
+  border-radius: 50%;
+}
+
 .doc .toggle-block > div {
   flex: 1;
   min-width: 0;
@@ -337,10 +358,9 @@
 .doc .toggle-block[data-count]:not([data-count=""])::after {
   content: attr(data-count);
   position: absolute;
-  /* centralizado pelo layout (e não por transform), que alinha as bordas aos pixels como no mock */
-  top: 0;
-  bottom: 0;
-  margin: auto 0;
+  /* na altura da linha do título (aberta ou fechada, como no mock): 9 px de margem interna +
+     metade da sobra da linha de 1,5 × 15 px; sem transform, as bordas ficam alinhadas aos pixels */
+  top: calc(9px + (22.5px - (1.5em + 4px)) / 2);
   box-sizing: border-box;
   height: calc(1.5em + 4px);
   right: 12px;
