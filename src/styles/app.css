@@ -757,10 +757,13 @@ kbd {
   user-select: text;
   /* selos e código um tom abaixo do fundo bege (o tom antigo sumia nele) */
   --chip: #e9e6de;
+  /* contorno das seções recolhíveis, que não têm fundo: um pouco mais forte que --ln */
+  --ln-secao: #dbd5c9;
 }
 
 [data-tema="escuro"] .sheet {
   --chip: #26262c;
+  --ln-secao: #2c2c33;
 }
 
 /* ---------------------------------------------------------- texto puro */
