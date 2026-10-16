@@ -111,3 +111,16 @@ Também dá para gerar no GitHub Actions (`.github/workflows/build.yml`).
 - Windows: `%APPDATA%\br.blocos.editor\`
 
 Imagens coladas num documento salvo vão para a pasta `imagens/` ao lado do arquivo.
+
+## Fontes e licenças
+
+As fontes que vêm com o Blocos (`src/assets/fonts/`) são livres, sob a
+[SIL Open Font License 1.1](https://openfontlicense.org); o texto da licença de cada uma
+está em `src/assets/fonts/licencas/`:
+
+- Bricolage Grotesque — The Bricolage Grotesque Project Authors
+- IBM Plex Mono — IBM Corp.
+- Inter — The Inter Project Authors
+- Atkinson Hyperlegible Next — The Atkinson Hyperlegible Next Project Authors
+- Literata — The Literata Project Authors
+- JetBrains Mono — The JetBrains Mono Project Authors
