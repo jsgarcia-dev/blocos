@@ -4,6 +4,7 @@ import { basename, dirname, joinPath, kindOf, stripExt } from "../lib/paths";
 import { splitFrontmatter } from "../lib/markdown";
 import { DEFAULT_PREFS, activeTab, askUser, getState, getTab, setState, toast, updateTab } from "./store";
 import type { DocKind, InitialContent, Library, Tab } from "./types";
+import { normalizeBackground } from "../lib/editorLook";
 
 /* ---------------------------------------------------------------- abas */
 
@@ -722,6 +723,8 @@ function parseLibrary(raw: string | null, documents: string | null): Library {
       base.folders = Array.isArray(l.folders) ? l.folders : [];
       base.lastPosition = l.lastPosition ?? null;
       base.prefs = { ...DEFAULT_PREFS, ...(l.prefs ?? {}) };
+      // fundos de versões anteriores (quadriculado, caderno) viram o mais parecido de hoje
+      base.prefs.background = normalizeBackground(base.prefs.background);
     } catch {
       /* usa padrão */
     }

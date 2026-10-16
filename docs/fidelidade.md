@@ -23,7 +23,10 @@ isso não acontece). Por isso ele deixou de ser usado.
   logo); agora começam logo depois dele.
 - **16/10 — Preferências → Editor**: posição do texto (à esquerda, o novo padrão, ou centralizado),
   largura, espaço entre linhas (o novo padrão, "Confortável", é mais solto que o do mock), espaço
-  entre letras e fundo (pontilhado, quadriculado, caderno, liso, cor ou imagem).
+  entre letras e fundo (pontilhado, liso, cor ou imagem).
+- **16/10 — fundos modernos** escolhidos no companheiro visual: cruzes, grade técnica,
+  isométrico, relevo, fluxo, aurora, papel e colmeia (substituem o quadriculado e o caderno;
+  desenhos gerados por `scripts/fundos/gerar_svgs.py`).
 - **16/10 — margens do texto em pixels**: margem do topo e margem lateral escolhidas nas
   Preferências (novo padrão: 24 px e 32 px, mais perto das bordas que os 52 px e 66 px do mock).
 - **16/10 — fonte do app à escolha** (Preferências → Fonte). O padrão continua a Bricolage

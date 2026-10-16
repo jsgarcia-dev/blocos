@@ -13,8 +13,6 @@
   /* área do documento */
   --cv: #f2f0ea;
   --dots: #d6d1c6;
-  /* linhas dos fundos quadriculado e caderno */
-  --grade: #e2ded4;
   --page: #ffffff;
   --ink: #17171a;
   --ink2: #4f4f58;
@@ -44,7 +42,6 @@
 [data-tema="escuro"] {
   --cv: #111113;
   --dots: #26262c;
-  --grade: #202026;
   --page: #1b1b1f;
   --ink: #ececef;
   --ink2: #b6b6c0;
@@ -733,21 +730,7 @@ kbd {
   scrollbar-gutter: stable;
 }
 
-.canvas.fundo-quadriculado {
-  background-image:
-    linear-gradient(var(--grade) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
-  background-size: 24px 24px;
-  /* as linhas rolam junto com o texto */
-  background-attachment: local;
-}
-
-.canvas.fundo-linhas {
-  background-image: linear-gradient(transparent 27px, var(--grade) 27px);
-  background-size: 100% 28px;
-  background-attachment: local;
-}
-
+/* os fundos com desenho (cruzes, grade técnica, relevo…) ficam em fundos.css */
 .canvas.fundo-liso,
 .canvas.fundo-cor {
   background-image: none;
@@ -1642,10 +1625,15 @@ kbd {
   padding: 5px 5px 6px;
   border-radius: 10px;
   border: 1px solid var(--ln);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--ink2);
   text-align: center;
+  /* nomes numa linha só (as miniaturas ficam alinhadas) */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
 }
 
 .bg-tile:hover {
@@ -1675,17 +1663,6 @@ kbd {
   background-size: 9px 9px;
 }
 
-.bg-prev.fundo-quadriculado {
-  background-image:
-    linear-gradient(var(--grade) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
-  background-size: 10px 10px;
-}
-
-.bg-prev.fundo-linhas {
-  background-image: linear-gradient(transparent 9px, var(--grade) 9px);
-  background-size: 100% 10px;
-}
 
 .bg-extra {
   display: flex;

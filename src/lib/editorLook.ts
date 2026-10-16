@@ -26,12 +26,27 @@ export const clampMargin = (v: number) => Math.round(Math.min(MARGIN_MAX, Math.m
 
 export const BACKGROUNDS: { id: EditorBackground; label: string }[] = [
   { id: "pontos", label: "Pontilhado" },
-  { id: "quadriculado", label: "Quadriculado" },
-  { id: "linhas", label: "Caderno" },
+  { id: "cruzes", label: "Cruzes" },
+  { id: "tecnica", label: "Grade técnica" },
+  { id: "isometrico", label: "Isométrico" },
+  { id: "relevo", label: "Relevo" },
+  { id: "fluxo", label: "Fluxo" },
+  { id: "aurora", label: "Aurora" },
+  { id: "papel", label: "Papel" },
+  { id: "colmeia", label: "Colmeia" },
   { id: "liso", label: "Liso" },
   { id: "cor", label: "Cor" },
   { id: "imagem", label: "Imagem" },
 ];
+
+/** Fundos que existiram em versões anteriores, trocados pelo mais parecido. */
+const RENAMED: Record<string, EditorBackground> = { quadriculado: "tecnica", linhas: "pontos" };
+
+/** Fundo salvo (talvez de uma versão anterior) convertido num fundo que existe hoje. */
+export function normalizeBackground(id: string): EditorBackground {
+  if (BACKGROUNDS.some((b) => b.id === id)) return id as EditorBackground;
+  return RENAMED[id] ?? "pontos";
+}
 
 export const COLOR_PRESETS: { color: string; label: string }[] = [
   { color: "#0b0b0c", label: "Preto" },
@@ -81,7 +96,7 @@ export function canvasLook(prefs: Prefs, dark: boolean, assetUrl: (path: string)
     "--pad-top": `${clampMargin(prefs.marginTop)}px`,
     "--pad-x": `${clampMargin(prefs.marginSide)}px`,
   };
-  let background = prefs.background;
+  let background = normalizeBackground(prefs.background);
   if (background === "imagem" && !prefs.backgroundImage) background = "pontos";
   if (background === "cor") {
     style.backgroundColor = prefs.backgroundColor;

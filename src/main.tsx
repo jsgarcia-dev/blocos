@@ -3,6 +3,7 @@ import "./assets/fonts/fonts.css";
 import "./assets/fonts/opcionais.css";
 import "./styles/app.css";
 import "./styles/doc.css";
+import "./styles/fundos.css";
 import { initPlatform } from "./lib/platform";
 import { handles } from "./lib/handles";
 import { useApp } from "./store/store";

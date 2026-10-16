@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { canvasLook, luminance } from "./editorLook";
+import { canvasLook, luminance, normalizeBackground } from "./editorLook";
 import { DEFAULT_PREFS } from "../store/store";
 import type { Prefs } from "../store/types";
 
@@ -60,6 +60,20 @@ describe("canvasLook", () => {
     expect(vars(p, true).backgroundImage).toBe(
       'linear-gradient(rgba(17, 17, 19, 0.4), rgba(17, 17, 19, 0.4)), url("asset:///dados/imagens/praia.jpg")',
     );
+  });
+
+  it("cada fundo novo vira a sua classe", () => {
+    for (const b of ["cruzes", "tecnica", "isometrico", "relevo", "fluxo", "aurora", "papel", "colmeia"] as const) {
+      expect(canvasLook(prefs({ background: b }), false, url).className).toContain(`fundo-${b}`);
+    }
+  });
+
+  it("fundos de versões anteriores viram o mais parecido de hoje", () => {
+    expect(normalizeBackground("quadriculado")).toBe("tecnica");
+    expect(normalizeBackground("linhas")).toBe("pontos");
+    expect(normalizeBackground("qualquer")).toBe("pontos");
+    expect(normalizeBackground("aurora")).toBe("aurora");
+    expect(canvasLook(prefs({ background: "quadriculado" as never }), false, url).className).toContain("fundo-tecnica");
   });
 
   it("imagem sem arquivo escolhido volta ao pontilhado", () => {

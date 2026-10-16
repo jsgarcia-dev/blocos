@@ -43,7 +43,19 @@ export type EditorAlign = "esquerda" | "centro";
 export type EditorWidth = "normal" | "larga" | "inteira";
 export type LineSpacing = "compacto" | "confortavel" | "amplo";
 export type LetterSpacing = "normal" | "leve" | "largo";
-export type EditorBackground = "pontos" | "quadriculado" | "linhas" | "liso" | "cor" | "imagem";
+export type EditorBackground =
+  | "pontos"
+  | "cruzes"
+  | "tecnica"
+  | "isometrico"
+  | "relevo"
+  | "fluxo"
+  | "aurora"
+  | "papel"
+  | "colmeia"
+  | "liso"
+  | "cor"
+  | "imagem";
 
 export interface Prefs {
   theme: Theme;

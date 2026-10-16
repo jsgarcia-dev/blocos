@@ -1,0 +1,156 @@
+/* ==========================================================
+   Fundos da área de edição (Preferências → Editor → Fundo)
+   Os desenhos em SVG vêm de scripts/fundos/gerar_svgs.py. Cada fundo tem
+   a versão clara e a escura; a área de edição usa a do seu data-tema e
+   as miniaturas das Preferências, a do tema do app.
+   O pontilhado (padrão) fica em app.css, na regra .canvas.
+   ========================================================== */
+
+:root,
+[data-tema="claro"] {
+  --fundo-cruzes: url(../assets/fundos/cruzes-claro.svg);
+  --fundo-colmeia: url(../assets/fundos/colmeia-claro.svg);
+  --fundo-relevo: url(../assets/fundos/relevo-claro.svg);
+  --fundo-fluxo: url(../assets/fundos/fluxo-claro.svg);
+  --fundo-papel: url(../assets/fundos/papel-claro.svg);
+  --papel: #efe9dc;
+  --trama-fina: rgba(130, 112, 84, 0.09);
+  --trama-forte: rgba(130, 112, 84, 0.2);
+  --aurora:
+    radial-gradient(55% 60% at 12% 15%, rgba(255, 138, 80, 0.22), transparent 70%),
+    radial-gradient(50% 55% at 88% 22%, rgba(166, 138, 255, 0.18), transparent 70%),
+    radial-gradient(60% 55% at 62% 100%, rgba(80, 196, 180, 0.16), transparent 72%);
+}
+
+:root[data-theme="escuro"],
+[data-tema="escuro"] {
+  --fundo-cruzes: url(../assets/fundos/cruzes-escuro.svg);
+  --fundo-colmeia: url(../assets/fundos/colmeia-escuro.svg);
+  --fundo-relevo: url(../assets/fundos/relevo-escuro.svg);
+  --fundo-fluxo: url(../assets/fundos/fluxo-escuro.svg);
+  --fundo-papel: url(../assets/fundos/papel-escuro.svg);
+  --papel: #141312;
+  --trama-fina: rgba(255, 255, 255, 0.03);
+  --trama-forte: rgba(255, 255, 255, 0.075);
+  --aurora:
+    radial-gradient(55% 60% at 12% 15%, rgba(255, 110, 60, 0.16), transparent 70%),
+    radial-gradient(50% 55% at 88% 22%, rgba(140, 110, 255, 0.14), transparent 70%),
+    radial-gradient(60% 55% at 62% 100%, rgba(40, 170, 150, 0.12), transparent 72%);
+}
+
+/* ---------------------------------------------------------- área de edição */
+.canvas.fundo-cruzes {
+  background-image: var(--fundo-cruzes);
+  background-size: 32px 32px;
+}
+
+/* papel milimetrado: grade fina a cada 24 px e marcada a cada 96 px */
+.canvas.fundo-tecnica {
+  background-image:
+    radial-gradient(circle, var(--trama-forte) 1.3px, transparent 1.6px),
+    linear-gradient(var(--trama-fina) 1px, transparent 1px),
+    linear-gradient(90deg, var(--trama-fina) 1px, transparent 1px),
+    linear-gradient(var(--trama-forte) 1px, transparent 1px),
+    linear-gradient(90deg, var(--trama-forte) 1px, transparent 1px);
+  background-size: 96px 96px, 24px 24px, 24px 24px, 96px 96px, 96px 96px;
+  background-position: -1px -1px, 0 0, 0 0, 0 0, 0 0;
+}
+
+/* pontos em triângulos: duas redes deslocadas meia célula */
+.canvas.fundo-isometrico {
+  background-image:
+    radial-gradient(circle, var(--dots) 1.1px, transparent 1.5px),
+    radial-gradient(circle, var(--dots) 1.1px, transparent 1.5px);
+  background-size: 24px 41.57px;
+  background-position: 0 0, 12px 20.78px;
+}
+
+.canvas.fundo-relevo,
+.canvas.fundo-fluxo {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.canvas.fundo-relevo {
+  background-image: var(--fundo-relevo);
+}
+
+.canvas.fundo-fluxo {
+  background-image: var(--fundo-fluxo);
+}
+
+.canvas.fundo-aurora {
+  background-image: var(--aurora);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.canvas.fundo-papel {
+  background-color: var(--papel);
+  background-image: var(--fundo-papel);
+  background-size: 160px 160px;
+}
+
+.canvas.fundo-colmeia {
+  background-image: var(--fundo-colmeia);
+  background-size: 42px 75px;
+}
+
+/* ---------------------------------------------------------- miniaturas nas Preferências */
+.bg-prev.fundo-cruzes {
+  background-image: var(--fundo-cruzes);
+  background-size: 13px 13px;
+}
+
+.bg-prev.fundo-tecnica {
+  background-image:
+    linear-gradient(var(--trama-fina) 1px, transparent 1px),
+    linear-gradient(90deg, var(--trama-fina) 1px, transparent 1px),
+    linear-gradient(var(--trama-forte) 1px, transparent 1px),
+    linear-gradient(90deg, var(--trama-forte) 1px, transparent 1px);
+  background-size: 8px 8px, 8px 8px, 32px 32px, 32px 32px;
+}
+
+.bg-prev.fundo-isometrico {
+  background-image:
+    radial-gradient(circle, var(--dots) 0.9px, transparent 1.2px),
+    radial-gradient(circle, var(--dots) 0.9px, transparent 1.2px);
+  background-size: 10px 17.32px;
+  background-position: 0 0, 5px 8.66px;
+}
+
+/* relevo e fluxo: um recorte do desenho em metade do tamanho (menor que isso o traço some) */
+.bg-prev.fundo-relevo {
+  background-image: var(--fundo-relevo);
+  background-size: 620px 450px;
+  background-position: -105px -100px;
+}
+
+.bg-prev.fundo-fluxo {
+  background-image: var(--fundo-fluxo);
+  background-size: 620px 450px;
+  background-position: -40px -18px;
+}
+
+.bg-prev.fundo-aurora {
+  background-image: var(--aurora);
+  background-size: 100% 100%;
+}
+
+.bg-prev.fundo-papel {
+  background-color: var(--papel);
+  background-image: var(--fundo-papel);
+  background-size: 80px 80px;
+}
+
+.bg-prev.fundo-colmeia {
+  background-image: var(--fundo-colmeia);
+  background-size: 17px 30px;
+}
+
+/* no tema escuro os traços finos quase somem numa miniatura de 40 px: só nelas, mais luz */
+:root[data-theme="escuro"] .bg-prev:is(.fundo-cruzes, .fundo-tecnica, .fundo-relevo, .fundo-fluxo, .fundo-colmeia) {
+  filter: brightness(1.7);
+}
+
