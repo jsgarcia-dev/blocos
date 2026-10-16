@@ -1,6 +1,6 @@
 /**
  * Só em desenvolvimento, com "?demo=mock": deixa a tela no mesmo estado do mock
- * aprovado — menu "/" aberto depois das seções, alça sobre "Banco Alfa",
+ * aprovado — menu "/" aberto depois das seções,
  * desfazer e refazer disponíveis, negrito ativo e o documento com o mesmo
  * tamanho do mock (18 registros, 1.284 palavras; o restante fica abaixo da área visível).
  */
@@ -63,13 +63,6 @@ export async function setupMockDemo() {
   ed.commands.undo();
   await wait(300);
 
-  // alça e destaque sobre "Banco Alfa"
-  const h2 = document.querySelector<HTMLElement>(".pane.active .ProseMirror h2");
-  const sheet = document.querySelector<HTMLElement>(".pane.active .sheet");
-  if (h2 && sheet) {
-    const r = h2.getBoundingClientRect();
-    sheet.dispatchEvent(new MouseEvent("mousemove", { bubbles: true, clientX: r.left + 40, clientY: r.top + 10 }));
-  }
   // no mock o documento aparece salvo e o cartão mostra a posição da sessão anterior
   await wait(900);
   const id = getState().activeId!;

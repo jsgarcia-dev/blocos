@@ -31,6 +31,8 @@ isso não acontece). Por isso ele deixou de ser usado.
   Preferências (novo padrão: 24 px e 32 px, mais perto das bordas que os 52 px e 66 px do mock).
 - **16/10 — fonte do app à escolha** (Preferências → Fonte). O padrão continua a Bricolage
   Grotesque do mock; a marca "b" fica sempre nela.
+- **16/10 — sem destaque nem alça nos blocos**: a faixa clara atrás do bloco sob o mouse e a
+  alça de arrastar ("+" e "⋮⋮") do mock saíram, a pedido do usuário; para inserir blocos fica o "/".
 - A tela de demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto,
   pontilhado e margens de 52 px e 66 px.
 

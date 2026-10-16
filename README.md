@@ -12,7 +12,6 @@ Roda no Linux e no Windows.
 - **Salva sozinho** logo depois que você para de digitar (dá para desligar nas Preferências).
 - **Formatação** em `.md`: títulos, negrito, itálico, sublinhado, tachado, cor do texto, **destaque colorido**, listas, lista de tarefas, links, tabelas, imagens, citação, código, divisor.
 - **Digite `/`** para inserir blocos: tabela, lista de tarefas, **seção recolhível**, **caixa de destaque**, títulos…
-- **Alça à esquerda de cada bloco**: `+` adiciona um bloco abaixo, `⋮⋮` arrasta o bloco para outro lugar (uma linha laranja mostra onde ele vai entrar; Esc cancela).
 - **Seções recolhíveis** com contador de itens — ótimo para grupos de registros.
 - **Selos abaixo do título** (H1): quando foi editado, quantos grupos e quantos registros.
 - **Lateral**: busca em tudo, "Continuar de onde parou", fixados, recentes e pastas.

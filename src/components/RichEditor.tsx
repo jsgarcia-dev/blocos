@@ -13,7 +13,6 @@ import { notifyChange, setLastPosition } from "../store/actions";
 import { registerEditor, unregisterEditor } from "../store/editors";
 import type { InitialContent } from "../store/types";
 import { LinkBubble, TableBubble } from "./Bubbles";
-import { BlockHandle } from "./BlockHandle";
 import { useCanvasLook } from "./useCanvasLook";
 
 function initialToContent(c: InitialContent) {
@@ -73,7 +72,6 @@ async function insertImageFiles(editor: Editor, files: File[], docPath: string |
 function RichEditorImpl({ id, active }: { id: string; active: boolean }) {
   const canvasRef = useRef<HTMLDivElement>(null);
   const statsTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const sheetRef = useRef<HTMLDivElement>(null);
   const spellcheck = useApp((s) => s.library.prefs.spellcheck);
 
   const editor = useEditor({
@@ -258,8 +256,7 @@ function RichEditorImpl({ id, active }: { id: string; active: boolean }) {
   if (!editor) return null;
   return (
     <div {...look} ref={canvasRef}>
-      <div className="sheet" ref={sheetRef}>
-        <BlockHandle editor={editor} sheet={sheetRef} />
+      <div className="sheet">
         <EditorContent editor={editor} />
         <LinkBubble editor={editor} />
         <TableBubble editor={editor} />

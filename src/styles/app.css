@@ -2122,7 +2122,6 @@ kbd {
   .toasts,
   .notice,
   .plain-banner,
-  .block-handle,
   .pane:not(.active) {
     display: none !important;
   }

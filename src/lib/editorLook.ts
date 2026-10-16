@@ -19,8 +19,6 @@ export const LETTER_SPACINGS: Record<LetterSpacing, string> = { normal: "normal"
 /** Limites das margens do texto (px). */
 export const MARGIN_MIN = 0;
 export const MARGIN_MAX = 200;
-/** Abaixo desta margem lateral a alça do bloco não cabe inteira: mostra só os pontos de arrastar. */
-export const HANDLE_FULL_WIDTH = 60;
 
 export const clampMargin = (v: number) => Math.round(Math.min(MARGIN_MAX, Math.max(MARGIN_MIN, Number.isFinite(v) ? v : 0)));
 
@@ -108,7 +106,6 @@ export function canvasLook(prefs: Prefs, dark: boolean, assetUrl: (path: string)
     const url = assetUrl(prefs.backgroundImage).replace(/["\\]/g, "\\$&");
     style.backgroundImage = `linear-gradient(${rgba}, ${rgba}), url("${url}")`;
   }
-  let className = `canvas fundo-${background} alinha-${prefs.editorAlign === "centro" ? "centro" : "esquerda"}`;
-  if (clampMargin(prefs.marginSide) < HANDLE_FULL_WIDTH) className += " alca-compacta";
+  const className = `canvas fundo-${background} alinha-${prefs.editorAlign === "centro" ? "centro" : "esquerda"}`;
   return { className, style: style as CSSProperties, tema };
 }

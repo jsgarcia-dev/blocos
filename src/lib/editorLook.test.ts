@@ -21,7 +21,7 @@ describe("luminance", () => {
 describe("canvasLook", () => {
   it("padrão: texto à esquerda, largura normal, linhas confortáveis, pontilhado", () => {
     const look = canvasLook(DEFAULT_PREFS, false, url);
-    expect(look.className).toBe("canvas fundo-pontos alinha-esquerda alca-compacta");
+    expect(look.className).toBe("canvas fundo-pontos alinha-esquerda");
     expect(look.tema).toBe("claro");
     expect(vars(DEFAULT_PREFS)).toMatchObject({ "--sheet-w": "740px", "--lh": "1.75", "--lh-li": "1.75", "--ls": "normal" });
   });
@@ -32,10 +32,6 @@ describe("canvasLook", () => {
     expect(vars(prefs({ marginTop: Number.NaN, marginSide: 17.6 }))).toMatchObject({ "--pad-top": "0px", "--pad-x": "18px" });
   });
 
-  it("alça do bloco inteira só quando a margem lateral comporta (60 px ou mais)", () => {
-    expect(canvasLook(prefs({ marginSide: 59 }), false, url).className).toContain("alca-compacta");
-    expect(canvasLook(prefs({ marginSide: 60 }), false, url).className).not.toContain("alca-compacta");
-  });
 
   it("centralizado, tela inteira, compacto (como no mock) e letras largas", () => {
     const p = prefs({ editorAlign: "centro", editorWidth: "inteira", lineSpacing: "compacto", letterSpacing: "largo" });
