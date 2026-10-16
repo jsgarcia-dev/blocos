@@ -63,6 +63,10 @@ export interface Prefs {
   backgroundImage: string | null;
   /** Véu sobre a imagem de fundo, de 0 a 90 (%), para o texto continuar legível. */
   backgroundVeil: number;
+  /** Distância (px) entre o topo da área de edição e o texto. */
+  marginTop: number;
+  /** Distância (px) entre as laterais da coluna de texto e o texto. */
+  marginSide: number;
 }
 
 export interface Recent {

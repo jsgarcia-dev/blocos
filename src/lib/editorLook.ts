@@ -16,6 +16,14 @@ export const LINE_HEIGHTS: Record<LineSpacing, { p: number; li: number }> = {
 
 export const LETTER_SPACINGS: Record<LetterSpacing, string> = { normal: "normal", leve: "0.015em", largo: "0.04em" };
 
+/** Limites das margens do texto (px). */
+export const MARGIN_MIN = 0;
+export const MARGIN_MAX = 200;
+/** Abaixo desta margem lateral a alça do bloco não cabe inteira: mostra só os pontos de arrastar. */
+export const HANDLE_FULL_WIDTH = 60;
+
+export const clampMargin = (v: number) => Math.round(Math.min(MARGIN_MAX, Math.max(MARGIN_MIN, Number.isFinite(v) ? v : 0)));
+
 export const BACKGROUNDS: { id: EditorBackground; label: string }[] = [
   { id: "pontos", label: "Pontilhado" },
   { id: "quadriculado", label: "Quadriculado" },
@@ -70,6 +78,8 @@ export function canvasLook(prefs: Prefs, dark: boolean, assetUrl: (path: string)
     "--lh": String(lh.p),
     "--lh-li": String(lh.li),
     "--ls": LETTER_SPACINGS[prefs.letterSpacing] ?? "normal",
+    "--pad-top": `${clampMargin(prefs.marginTop)}px`,
+    "--pad-x": `${clampMargin(prefs.marginSide)}px`,
   };
   let background = prefs.background;
   if (background === "imagem" && !prefs.backgroundImage) background = "pontos";
@@ -83,6 +93,7 @@ export function canvasLook(prefs: Prefs, dark: boolean, assetUrl: (path: string)
     const url = assetUrl(prefs.backgroundImage).replace(/["\\]/g, "\\$&");
     style.backgroundImage = `linear-gradient(${rgba}, ${rgba}), url("${url}")`;
   }
-  const className = `canvas fundo-${background} alinha-${prefs.editorAlign === "centro" ? "centro" : "esquerda"}`;
+  let className = `canvas fundo-${background} alinha-${prefs.editorAlign === "centro" ? "centro" : "esquerda"}`;
+  if (clampMargin(prefs.marginSide) < HANDLE_FULL_WIDTH) className += " alca-compacta";
   return { className, style: style as CSSProperties, tema };
 }

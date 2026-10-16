@@ -1,5 +1,6 @@
-import { ImageIcon, RotateCcw } from "lucide-react";
-import { BACKGROUNDS, COLOR_PRESETS } from "../lib/editorLook";
+import { useEffect, useState } from "react";
+import { ImageIcon, Minus, Plus, RotateCcw } from "lucide-react";
+import { BACKGROUNDS, COLOR_PRESETS, MARGIN_MAX, MARGIN_MIN, clampMargin } from "../lib/editorLook";
 import { platform } from "../lib/platform";
 import { DEFAULT_PREFS, toast, useApp } from "../store/store";
 import { setPrefsAndSave } from "../store/actions";
@@ -13,6 +14,48 @@ function Seg<T extends string>({ value, options, onChange }: { value: T; options
           {o.label}
         </button>
       ))}
+    </div>
+  );
+}
+
+/** Valor em pixels: digitado ou com − e + (de 4 em 4). */
+function PxField({ value, onChange, label }: { value: number; onChange: (v: number) => void; label: string }) {
+  const [text, setText] = useState(String(value));
+  useEffect(() => setText(String(value)), [value]);
+  const commit = (raw: string) => {
+    const n = Number.parseInt(raw, 10);
+    if (Number.isNaN(n)) return setText(String(value));
+    const v = clampMargin(n);
+    setText(String(v));
+    if (v !== value) onChange(v);
+  };
+  return (
+    <div className="px-field">
+      <button title="Diminuir 4 px" aria-label={`Diminuir ${label}`} onClick={() => onChange(clampMargin(value - 4))} disabled={value <= MARGIN_MIN}>
+        <Minus size={14} />
+      </button>
+      <label>
+        <input
+          type="number"
+          min={MARGIN_MIN}
+          max={MARGIN_MAX}
+          step={1}
+          value={text}
+          aria-label={label}
+          onChange={(e) => {
+            setText(e.target.value);
+            // aplica na hora enquanto digita um número válido
+            const n = Number.parseInt(e.target.value, 10);
+            if (!Number.isNaN(n) && n >= MARGIN_MIN && n <= MARGIN_MAX) onChange(n);
+          }}
+          onBlur={(e) => commit(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && commit((e.target as HTMLInputElement).value)}
+        />
+        <em>px</em>
+      </label>
+      <button title="Aumentar 4 px" aria-label={`Aumentar ${label}`} onClick={() => onChange(clampMargin(value + 4))} disabled={value >= MARGIN_MAX}>
+        <Plus size={14} />
+      </button>
     </div>
   );
 }
@@ -46,6 +89,8 @@ const EDITOR_KEYS = [
   "backgroundColor",
   "backgroundImage",
   "backgroundVeil",
+  "marginTop",
+  "marginSide",
 ] as const satisfies readonly (keyof Prefs)[];
 
 /** Seção "Editor" das Preferências: coluna de texto, espaçamentos e fundo. */
@@ -94,6 +139,22 @@ export function EditorPrefs() {
           <span>Até onde as linhas vão antes de quebrar</span>
         </div>
         <Seg value={prefs.editorWidth} options={WIDTHS} onChange={(v) => setPrefsAndSave({ editorWidth: v })} />
+      </div>
+
+      <div className="pref">
+        <div>
+          <b>Margem do topo</b>
+          <span>Distância entre o alto da área de edição e o texto</span>
+        </div>
+        <PxField label="margem do topo" value={prefs.marginTop} onChange={(v) => setPrefsAndSave({ marginTop: v })} />
+      </div>
+
+      <div className="pref">
+        <div>
+          <b>Margem lateral</b>
+          <span>Distância entre a borda e o texto, dos dois lados</span>
+        </div>
+        <PxField label="margem lateral" value={prefs.marginSide} onChange={(v) => setPrefsAndSave({ marginSide: v })} />
       </div>
 
       <div className="pref">

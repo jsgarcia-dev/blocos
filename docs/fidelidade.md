@@ -23,8 +23,11 @@ isso não acontece). Por isso ele deixou de ser usado.
   logo); agora começam logo depois dele.
 - **16/10 — Preferências → Editor**: posição do texto (à esquerda, o novo padrão, ou centralizado),
   largura, espaço entre linhas (o novo padrão, "Confortável", é mais solto que o do mock), espaço
-  entre letras e fundo (pontilhado, quadriculado, caderno, liso, cor ou imagem). A tela de
-  demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto e pontilhado.
+  entre letras e fundo (pontilhado, quadriculado, caderno, liso, cor ou imagem).
+- **16/10 — margens do texto em pixels**: margem do topo e margem lateral escolhidas nas
+  Preferências (novo padrão: 24 px e 32 px, mais perto das bordas que os 52 px e 66 px do mock).
+- A tela de demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto,
+  pontilhado e margens de 52 px e 66 px.
 
 Por isso, na barra de abas e na área do documento o app agora difere do mock **de propósito**.
 

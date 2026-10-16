@@ -709,7 +709,6 @@ kbd {
   inset: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 24px;
   background-color: var(--cv);
   background-image: radial-gradient(circle, var(--dots) 1px, transparent 1.3px);
   background-size: 18px 18px;
@@ -761,7 +760,9 @@ kbd {
   max-width: calc(100% - 32px);
   min-height: 100%;
   height: max-content;
-  padding: 28px 66px 160px;
+  /* margens do texto em px escolhidas nas Preferências (useCanvasLook); divididas pelo zoom
+     para continuarem com os mesmos pixels quando o texto aumenta ou diminui */
+  padding: calc(var(--pad-top, 52px) / var(--zoom, 1)) calc(var(--pad-x, 66px) / var(--zoom, 1)) 160px;
   position: relative;
   zoom: var(--zoom, 1);
   user-select: text;
@@ -1843,6 +1844,65 @@ kbd {
   font-size: 13px;
   color: var(--ink) !important;
   font-weight: 600;
+}
+
+/* margens do texto em pixels (Preferências → Editor) */
+.px-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.px-field button {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--chip);
+  display: grid;
+  place-items: center;
+}
+
+.px-field button:disabled {
+  opacity: 0.4;
+}
+
+.px-field label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--ln);
+  background: var(--pop);
+}
+
+.px-field label:focus-within {
+  border-color: var(--ac);
+}
+
+.px-field input {
+  width: 34px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ink);
+  font: 600 13px var(--font);
+  text-align: right;
+  -moz-appearance: textfield;
+}
+
+.px-field input::-webkit-inner-spin-button,
+.px-field input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.px-field em {
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--mu);
 }
 
 .folder-list {

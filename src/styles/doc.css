@@ -644,14 +644,24 @@
 /* alça de arrastar (fica fora do conteúdo, à esquerda) */
 .block-handle {
   position: absolute;
-  /* como no mock: 50px à esquerda da faixa do bloco destacado (que começa 10px antes do texto) */
-  left: 6px;
+  /* como no mock: 50px à esquerda da faixa do bloco destacado (que começa 10px antes do texto);
+     acompanha a margem lateral escolhida nas Preferências */
+  left: calc(var(--pad-x, 66px) / var(--zoom, 1) - 60px);
   display: flex;
   gap: 2px;
   color: #a8a8b0;
   z-index: 10;
   animation: fade 0.12s ease-out;
   user-select: none;
+}
+
+/* margem lateral estreita: só os pontos de arrastar, logo antes do texto (o "+" fica com o "/") */
+.alca-compacta .block-handle {
+  left: max(0px, calc(var(--pad-x, 66px) / var(--zoom, 1) - 30px));
+}
+
+.alca-compacta .block-handle i:first-child {
+  display: none;
 }
 
 .block-handle i {

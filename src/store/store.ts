@@ -24,6 +24,8 @@ export const DEFAULT_PREFS: Prefs = {
   backgroundColor: "#0b0b0c",
   backgroundImage: null,
   backgroundVeil: 55,
+  marginTop: 24,
+  marginSide: 32,
 };
 
 export interface FindState {
