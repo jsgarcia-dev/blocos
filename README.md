@@ -26,6 +26,7 @@ Roda no Linux e no Windows.
 - **Percebe mudanças feitas fora do app** e recarrega (ou pergunta, se você também mudou).
 - **Exportar** como HTML e **imprimir/salvar PDF**.
 - Tema **claro**, **escuro** ou do sistema; zoom do texto.
+- **Fonte do app inteiro** à escolha: as que vêm com o Blocos (Bricolage Grotesque, Inter, Atkinson Hyperlegible Next, Literata, JetBrains Mono), a fonte do sistema ou qualquer fonte instalada no computador.
 - Editor ajustável nas Preferências: texto **à esquerda** ou **centralizado**, largura da coluna, margens do topo e das laterais em pixels, espaço entre linhas e entre letras, e fundo **pontilhado**, **quadriculado**, **caderno**, **liso**, de **cor** própria (o texto clareia sozinho em fundo escuro) ou uma **imagem** sua com véu ajustável.
 - Abre arquivos com **dois cliques** no gerenciador de arquivos; um segundo arquivo abre como nova aba na mesma janela.
 

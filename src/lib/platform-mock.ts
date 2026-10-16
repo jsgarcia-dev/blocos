@@ -261,6 +261,10 @@ export function createMockPlatform(): Platform {
     async appDirs() {
       return { documents: DOCS, home: HOME, data: `${HOME}/.local/share/blocos` };
     },
+    async listSystemFonts() {
+      // demonstração: fontes comuns que o navegador costuma ter
+      return ["Arial", "Courier New", "DejaVu Sans", "Georgia", "Liberation Serif", "Noto Sans", "Times New Roman", "Ubuntu", "Verdana"];
+    },
     async printPage() {
       window.print();
     },

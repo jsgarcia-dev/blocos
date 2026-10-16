@@ -9,6 +9,7 @@ import { QuickSearch } from "./components/QuickSearch";
 import { ConfirmDialog, ContextMenu, Preferences, Toasts } from "./components/Overlays";
 import { openLinkEditor } from "./components/Bubbles";
 import { handles } from "./lib/handles";
+import { fontStack } from "./lib/fonts";
 import { platform } from "./lib/platform";
 import { activeTab, getState, setState, useApp } from "./store/store";
 import {
@@ -36,6 +37,14 @@ function useTheme() {
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, [theme]);
+}
+
+/** Fonte escolhida em Preferências → Fonte, aplicada no app inteiro. */
+function useAppFont() {
+  const family = useApp((s) => s.library.prefs.fontFamily);
+  useEffect(() => {
+    document.documentElement.style.setProperty("--font", fontStack(family));
+  }, [family]);
 }
 
 function useShortcuts() {
@@ -125,6 +134,7 @@ export default function App() {
   const zoom = useApp((s) => s.library.prefs.zoom);
   const maximized = useApp((s) => s.maximized);
   useTheme();
+  useAppFont();
   useShortcuts();
 
   useEffect(() => {

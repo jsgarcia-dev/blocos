@@ -47,6 +47,8 @@ export type EditorBackground = "pontos" | "quadriculado" | "linhas" | "liso" | "
 
 export interface Prefs {
   theme: Theme;
+  /** Fonte de todo o app (menus, abas, lateral e texto); ver src/lib/fonts.ts. */
+  fontFamily: string;
   autosave: boolean;
   zoom: number;
   sidebar: boolean;

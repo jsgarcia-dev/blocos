@@ -12,6 +12,7 @@ import type {
 
 export const DEFAULT_PREFS: Prefs = {
   theme: "claro",
+  fontFamily: "Bricolage Grotesque",
   autosave: true,
   zoom: 100,
   sidebar: true,

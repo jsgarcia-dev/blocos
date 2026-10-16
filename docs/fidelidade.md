@@ -26,6 +26,8 @@ isso não acontece). Por isso ele deixou de ser usado.
   entre letras e fundo (pontilhado, quadriculado, caderno, liso, cor ou imagem).
 - **16/10 — margens do texto em pixels**: margem do topo e margem lateral escolhidas nas
   Preferências (novo padrão: 24 px e 32 px, mais perto das bordas que os 52 px e 66 px do mock).
+- **16/10 — fonte do app à escolha** (Preferências → Fonte). O padrão continua a Bricolage
+  Grotesque do mock; a marca "b" fica sempre nela.
 - A tela de demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto,
   pontilhado e margens de 52 px e 66 px.
 

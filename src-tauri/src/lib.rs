@@ -1,3 +1,4 @@
+mod fonts;
 mod library;
 mod textfile;
 
@@ -142,6 +143,12 @@ fn app_dirs(app: AppHandle) -> Result<AppDirs, String> {
     })
 }
 
+/// Fontes instaladas no computador; roda fora da linha principal, pois lê os arquivos de fonte.
+#[tauri::command]
+async fn list_system_fonts() -> Vec<String> {
+    tauri::async_runtime::spawn_blocking(fonts::system_families).await.unwrap_or_default()
+}
+
 #[tauri::command]
 fn print_page(window: WebviewWindow) -> Result<(), String> {
     window.print().map_err(|e| e.to_string())
@@ -200,6 +207,7 @@ pub fn run() {
             save_state,
             take_launch_paths,
             app_dirs,
+            list_system_fonts,
             print_page
         ])
         .run(tauri::generate_context!())

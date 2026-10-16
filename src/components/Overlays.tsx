@@ -6,6 +6,7 @@ import { setState, useApp } from "../store/store";
 import { addFolder, removeFolder, setPrefsAndSave } from "../store/actions";
 import type { Theme } from "../store/types";
 import { EditorPrefs } from "./EditorPrefs";
+import { FontPicker } from "./FontPicker";
 
 export function ConfirmDialog() {
   const req = useApp((s) => s.confirm);
@@ -148,6 +149,8 @@ export function Preferences() {
             ))}
           </div>
         </div>
+
+        <FontPicker />
 
         <div className="pref">
           <div>

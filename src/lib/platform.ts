@@ -61,6 +61,8 @@ export interface Platform {
   saveState(name: string, data: string): Promise<void>;
   takeLaunchPaths(): Promise<string[]>;
   appDirs(): Promise<AppDirs>;
+  /** Famílias de fonte instaladas no computador, em ordem alfabética. */
+  listSystemFonts(): Promise<string[]>;
   printPage(): Promise<void>;
   openFiles(filters?: DialogFilter[]): Promise<string[]>;
   openImage(): Promise<string | null>;
@@ -106,6 +108,7 @@ async function createTauriPlatform(): Promise<Platform> {
     saveState: (name, data) => invoke("save_state", { name, data }),
     takeLaunchPaths: () => invoke("take_launch_paths"),
     appDirs: () => invoke("app_dirs"),
+    listSystemFonts: () => invoke("list_system_fonts"),
     printPage: () => invoke("print_page"),
     openFiles: async (filters) =>
       toList(
