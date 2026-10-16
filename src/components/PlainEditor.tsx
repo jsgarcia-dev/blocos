@@ -4,6 +4,7 @@ import { baselines, handles, pendingJumps } from "../lib/handles";
 import { countWords, fold } from "../lib/format";
 import { getState, getTab, setState, updateTab, useApp } from "../store/store";
 import { convertTxtToMd, notifyChange, setLastPosition } from "../store/actions";
+import { useCanvasLook } from "./useCanvasLook";
 
 function foldIndexable(s: string): string {
   return s
@@ -184,8 +185,10 @@ function PlainEditorImpl({ id, active }: { id: string; active: boolean }) {
     if (active) scheduleStats();
   }, [active]);
 
+  const look = useCanvasLook();
+
   return (
-    <div className="canvas" ref={canvasRef}>
+    <div {...look} ref={canvasRef}>
       <div className="sheet plain">
         <div className="plain-banner">
           <FileText size={16} />

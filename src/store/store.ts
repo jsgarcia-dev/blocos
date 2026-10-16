@@ -16,6 +16,14 @@ export const DEFAULT_PREFS: Prefs = {
   zoom: 100,
   sidebar: true,
   spellcheck: false,
+  editorAlign: "esquerda",
+  editorWidth: "normal",
+  lineSpacing: "confortavel",
+  letterSpacing: "normal",
+  background: "pontos",
+  backgroundColor: "#0b0b0c",
+  backgroundImage: null,
+  backgroundVeil: 55,
 };
 
 export interface FindState {
@@ -47,6 +55,8 @@ export interface AppState {
   lastHighlight: string;
   maximized: boolean;
   native: boolean;
+  /** Tema escuro em uso (já resolvido quando o tema é "Do sistema"). */
+  dark: boolean;
 }
 
 export const useApp = create<AppState>(() => ({
@@ -67,6 +77,7 @@ export const useApp = create<AppState>(() => ({
   lastHighlight: DEFAULT_HIGHLIGHT,
   maximized: false,
   native: false,
+  dark: false,
 }));
 
 export const getState = useApp.getState;

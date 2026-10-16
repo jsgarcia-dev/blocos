@@ -2,7 +2,10 @@
    Blocos — moldura do app (fiel ao mock "C · Blocos")
    ========================================================== */
 
-:root {
+/* as cores também são aplicadas na área de edição (data-tema), que pode usar as do
+   tema oposto quando o fundo escolhido nas Preferências pede (ex.: fundo preto no tema claro) */
+:root,
+[data-tema="claro"] {
   /* moldura escura (barra de título e lateral) */
   --ch: #151517;
   --ch2: #1f1f23;
@@ -10,6 +13,8 @@
   /* área do documento */
   --cv: #f2f0ea;
   --dots: #d6d1c6;
+  /* linhas dos fundos quadriculado e caderno */
+  --grade: #e2ded4;
   --page: #ffffff;
   --ink: #17171a;
   --ink2: #4f4f58;
@@ -30,9 +35,11 @@
   color-scheme: light;
 }
 
-:root[data-theme="escuro"] {
+:root[data-theme="escuro"],
+[data-tema="escuro"] {
   --cv: #111113;
   --dots: #26262c;
+  --grade: #202026;
   --page: #1b1b1f;
   --ink: #ececef;
   --ink2: #b6b6c0;
@@ -139,13 +146,10 @@ kbd {
   display: grid;
   place-items: center;
   font: 800 15px/1 var(--font);
-  margin-right: 150px;
+  /* as abas começam logo depois do "b" (pedido do usuário; no mock ficavam alinhadas ao editor) */
+  margin-right: 14px;
   flex-shrink: 0;
   cursor: default;
-}
-
-.logo.compact {
-  margin-right: 6px;
 }
 
 .ptabs {
@@ -717,10 +721,43 @@ kbd {
   scrollbar-color: rgba(120, 120, 130, 0.35) transparent;
 }
 
+/* Preferências → Editor: fundo, posição da coluna de texto */
+.canvas.alinha-esquerda {
+  justify-content: flex-start;
+  /* só a calha da barra de rolagem da direita: o texto começa junto da borda esquerda */
+  scrollbar-gutter: stable;
+}
+
+.canvas.fundo-quadriculado {
+  background-image:
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+  background-size: 24px 24px;
+  /* as linhas rolam junto com o texto */
+  background-attachment: local;
+}
+
+.canvas.fundo-linhas {
+  background-image: linear-gradient(transparent 27px, var(--grade) 27px);
+  background-size: 100% 28px;
+  background-attachment: local;
+}
+
+.canvas.fundo-liso,
+.canvas.fundo-cor {
+  background-image: none;
+}
+
+.canvas.fundo-imagem {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 /* o texto fica direto no fundo da área de edição, sem cartão branco (pedido do usuário);
    a coluna continua com largura confortável de leitura */
 .sheet {
-  width: 740px;
+  width: var(--sheet-w, 740px);
   max-width: calc(100% - 32px);
   min-height: 100%;
   height: max-content;
@@ -732,7 +769,7 @@ kbd {
   --chip: #e9e6de;
 }
 
-:root[data-theme="escuro"] .sheet {
+[data-tema="escuro"] .sheet {
   --chip: #26262c;
 }
 
@@ -788,7 +825,8 @@ kbd {
   overflow: hidden;
   background: transparent;
   color: var(--ink);
-  font: 400 14.5px/1.75 var(--mono);
+  font: 400 14.5px/var(--lh, 1.75) var(--mono);
+  letter-spacing: var(--ls, normal);
   tab-size: 4;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -1548,8 +1586,154 @@ kbd {
 }
 
 .prefs-dialog {
-  width: 560px;
+  width: 600px;
   padding: 18px 22px 16px;
+  /* com a seção Editor as preferências ficaram longas: rolam dentro da janela */
+  max-height: calc(100vh - 64px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.pref-sec {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 18px;
+  padding-bottom: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--mu);
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--ac);
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+/* fundos do editor: miniaturas */
+.bg-tiles {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.bg-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 5px;
+  padding: 5px 5px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--ln);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ink2);
+  text-align: center;
+}
+
+.bg-tile:hover {
+  border-color: var(--mu);
+}
+
+.bg-tile.on {
+  border-color: var(--ac);
+  box-shadow: 0 0 0 2px var(--acs);
+  color: var(--ink);
+}
+
+.bg-prev {
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid var(--ln);
+  background-color: var(--cv);
+  display: grid;
+  place-items: center;
+  color: var(--mu);
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-prev.fundo-pontos {
+  background-image: radial-gradient(circle, var(--dots) 1px, transparent 1.3px);
+  background-size: 9px 9px;
+}
+
+.bg-prev.fundo-quadriculado {
+  background-image:
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
+  background-size: 10px 10px;
+}
+
+.bg-prev.fundo-linhas {
+  background-image: linear-gradient(transparent 9px, var(--grade) 9px);
+  background-size: 100% 10px;
+}
+
+.bg-extra {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--ln);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+  position: relative;
+  cursor: pointer;
+}
+
+.swatch.on {
+  box-shadow:
+    0 0 0 2px var(--pop),
+    0 0 0 4px var(--ac);
+}
+
+/* "outra cor": abre o seletor de cores do sistema */
+.swatch.custom {
+  background: conic-gradient(#ff5a1f, #ffd43b, #40c057, #339af0, #7048e8, #e64980, #ff5a1f);
+  overflow: hidden;
+}
+
+.swatch.custom input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.veil {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.veil em {
+  font-style: normal;
+  font-size: 12.5px;
+  color: var(--mu);
+  min-width: 30px;
+}
+
+.veil input {
+  width: 160px;
+  accent-color: var(--ac);
 }
 
 .prefs-dialog .dh {

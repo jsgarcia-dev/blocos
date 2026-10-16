@@ -14,6 +14,13 @@ export async function setupMockDemo() {
   const style = document.createElement("style");
   style.textContent = "*,*::before,*::after{animation:none!important;transition:none!important}";
   document.head.appendChild(style);
+  // o mock tem a coluna centralizada, o espaçamento compacto e o fundo pontilhado
+  setState((s) => ({
+    library: {
+      ...s.library,
+      prefs: { ...s.library.prefs, editorAlign: "centro", editorWidth: "normal", lineSpacing: "compacto", letterSpacing: "normal", background: "pontos" },
+    },
+  }));
   for (let i = 0; i < 50 && !handles.get(getState().activeId ?? "")?.editor; i++) await wait(100);
   const ed = handles.get(getState().activeId ?? "")?.editor;
   if (!ed) return;

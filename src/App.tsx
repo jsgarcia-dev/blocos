@@ -30,6 +30,7 @@ function useTheme() {
     const apply = () => {
       const dark = theme === "escuro" || (theme === "sistema" && mq.matches);
       document.documentElement.dataset.theme = dark ? "escuro" : "claro";
+      setState({ dark });
     };
     apply();
     mq.addEventListener("change", apply);

@@ -39,6 +39,11 @@ export interface Tab {
 }
 
 export type Theme = "claro" | "escuro" | "sistema";
+export type EditorAlign = "esquerda" | "centro";
+export type EditorWidth = "normal" | "larga" | "inteira";
+export type LineSpacing = "compacto" | "confortavel" | "amplo";
+export type LetterSpacing = "normal" | "leve" | "largo";
+export type EditorBackground = "pontos" | "quadriculado" | "linhas" | "liso" | "cor" | "imagem";
 
 export interface Prefs {
   theme: Theme;
@@ -46,6 +51,18 @@ export interface Prefs {
   zoom: number;
   sidebar: boolean;
   spellcheck: boolean;
+  /** Onde a coluna de texto fica na área de edição. */
+  editorAlign: EditorAlign;
+  editorWidth: EditorWidth;
+  lineSpacing: LineSpacing;
+  letterSpacing: LetterSpacing;
+  background: EditorBackground;
+  /** Cor do fundo quando `background` é "cor". */
+  backgroundColor: string;
+  /** Cópia da imagem de fundo (na pasta de dados do app) quando `background` é "imagem". */
+  backgroundImage: string | null;
+  /** Véu sobre a imagem de fundo, de 0 a 90 (%), para o texto continuar legível. */
+  backgroundVeil: number;
 }
 
 export interface Recent {

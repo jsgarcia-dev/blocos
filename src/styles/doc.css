@@ -6,7 +6,9 @@
   outline: none;
   font-family: var(--font, "Bricolage Grotesque", sans-serif);
   font-size: 15px;
-  line-height: 1.55;
+  /* espaços entre linhas e entre letras vêm de Preferências → Editor (useCanvasLook) */
+  line-height: var(--lh-li, 1.55);
+  letter-spacing: var(--ls, normal);
   color: var(--ink2);
   caret-color: var(--ac);
   word-wrap: break-word;
@@ -24,7 +26,7 @@
 
 .doc p {
   padding: 3px 0;
-  line-height: 1.5;
+  line-height: var(--lh, 1.5);
   min-height: 1.5em;
 }
 
@@ -119,12 +121,12 @@
 .doc li {
   position: relative;
   padding: 3px 0 3px 22px;
-  line-height: 1.55;
+  line-height: var(--lh-li, 1.55);
 }
 
 .doc li > p {
   padding: 0;
-  /* itens de lista seguem a altura de linha da lista (1,55), como no mock */
+  /* itens de lista seguem a altura de linha da lista (1,55 no "compacto", como no mock) */
   line-height: inherit;
   min-height: 0;
 }
@@ -374,7 +376,7 @@
   margin-top: 12px;
 }
 
-:root[data-theme="escuro"] .doc .callout {
+[data-tema="escuro"] .doc .callout {
   color: #ffc4a8;
 }
 
@@ -566,7 +568,7 @@
   color: #c4c4ca;
 }
 
-:root[data-theme="escuro"] .ProseMirror .is-empty::before {
+[data-tema="escuro"] .ProseMirror .is-empty::before {
   color: #4a4a52;
 }
 
@@ -666,7 +668,7 @@
   cursor: grab;
 }
 
-:root[data-theme="escuro"] .block-handle i:last-child {
+[data-tema="escuro"] .block-handle i:last-child {
   background: #26262c;
 }
 

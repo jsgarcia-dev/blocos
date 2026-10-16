@@ -84,7 +84,6 @@ function TabPill({ tab, active }: { tab: Tab; active: boolean }) {
 export function Titlebar() {
   const tabs = useApp((s) => s.tabs);
   const activeId = useApp((s) => s.activeId);
-  const sidebar = useApp((s) => s.library.prefs.sidebar);
   const [maximized, setMaximized] = useState(false);
 
   useEffect(() => {
@@ -105,7 +104,7 @@ export function Titlebar() {
 
   return (
     <header className="titlebar" data-tauri-drag-region>
-      <div className={`logo${sidebar ? "" : " compact"}`} data-tauri-drag-region>
+      <div className="logo" data-tauri-drag-region>
         b
       </div>
       <div className="ptabs" onWheel={(e) => (e.currentTarget.scrollLeft += e.deltaY)}>

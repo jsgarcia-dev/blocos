@@ -5,6 +5,7 @@ import { prettyPath } from "../lib/paths";
 import { setState, useApp } from "../store/store";
 import { addFolder, removeFolder, setPrefsAndSave } from "../store/actions";
 import type { Theme } from "../store/types";
+import { EditorPrefs } from "./EditorPrefs";
 
 export function ConfirmDialog() {
   const req = useApp((s) => s.confirm);
@@ -179,6 +180,10 @@ export function Preferences() {
             </button>
           </div>
         </div>
+
+        <EditorPrefs />
+
+        <div className="pref-sec">GERAL</div>
 
         <div className="pref col">
           <div>

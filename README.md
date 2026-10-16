@@ -26,6 +26,7 @@ Roda no Linux e no Windows.
 - **Percebe mudanças feitas fora do app** e recarrega (ou pergunta, se você também mudou).
 - **Exportar** como HTML e **imprimir/salvar PDF**.
 - Tema **claro**, **escuro** ou do sistema; zoom do texto.
+- Editor ajustável nas Preferências: texto **à esquerda** ou **centralizado**, largura da coluna, espaço entre linhas e entre letras, e fundo **pontilhado**, **quadriculado**, **caderno**, **liso**, de **cor** própria (o texto clareia sozinho em fundo escuro) ou uma **imagem** sua com véu ajustável.
 - Abre arquivos com **dois cliques** no gerenciador de arquivos; um segundo arquivo abre como nova aba na mesma janela.
 
 ## Como o Markdown é gravado

@@ -14,6 +14,7 @@ import { registerEditor, unregisterEditor } from "../store/editors";
 import type { InitialContent } from "../store/types";
 import { LinkBubble, TableBubble } from "./Bubbles";
 import { BlockHandle } from "./BlockHandle";
+import { useCanvasLook } from "./useCanvasLook";
 
 function initialToContent(c: InitialContent) {
   if (c.type === "json") return c.json as object;
@@ -252,9 +253,11 @@ function RichEditorImpl({ id, active }: { id: string; active: boolean }) {
     if (active && editor) scheduleStats();
   }, [active, editor]);
 
+  const look = useCanvasLook();
+
   if (!editor) return null;
   return (
-    <div className="canvas" ref={canvasRef}>
+    <div {...look} ref={canvasRef}>
       <div className="sheet" ref={sheetRef}>
         <BlockHandle editor={editor} sheet={sheetRef} />
         <EditorContent editor={editor} />

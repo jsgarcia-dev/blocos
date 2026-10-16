@@ -15,23 +15,29 @@ capturado pelo modo `--screenshot`. Esse modo antigo usa "tempo virtual" e, nele
 grande do menu "/" faz o Chrome desenhar o texto do menu em tons de cinza no app (no uso normal
 isso não acontece). Por isso ele deixou de ser usado.
 
-## Mudança pedida depois da aprovação (14/10)
+## Mudanças pedidas depois da aprovação
 
-O usuário preferiu o texto **direto no fundo pontilhado**, sem o cartão branco centralizado do
-mock. A página branca (fundo, borda e sombra) saiu; a coluna de texto continua com a mesma largura
-e o mesmo recuo. Os selos e o código ganharam um tom um pouco mais escuro para não sumirem no
-fundo bege. Por isso, na área do documento o app agora difere do mock **de propósito**.
+- **14/10 — sem cartão branco**: o texto fica **direto no fundo**, sem a página branca centralizada
+  do mock. Os selos e o código ganharam um tom um pouco mais escuro para não sumirem no fundo bege.
+- **16/10 — abas junto do "b"**: no mock as abas começavam alinhadas ao editor (150 px depois do
+  logo); agora começam logo depois dele.
+- **16/10 — Preferências → Editor**: posição do texto (à esquerda, o novo padrão, ou centralizado),
+  largura, espaço entre linhas (o novo padrão, "Confortável", é mais solto que o do mock), espaço
+  entre letras e fundo (pontilhado, quadriculado, caderno, liso, cor ou imagem). A tela de
+  demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto e pontilhado.
+
+Por isso, na barra de abas e na área do documento o app agora difere do mock **de propósito**.
 
 ## Resultado
 
-Comparação atual (sem o cartão branco):
+Comparação atual:
 
 | | |
 | --- | --- |
 | Pixels da janela | 826.000 |
-| Área do documento | difere do mock de propósito (fundo bege em vez do cartão branco) |
-| Fora do documento e do seletor de estilo: diferença maior que 40 | **0 pixels** |
-| Fora do documento e do seletor de estilo: diferença maior que 10 | **1 pixel** (13 em 255, na borda do canto inferior direito) |
+| Barra de abas e área do documento | diferem do mock de propósito (mudanças acima) |
+| Fora delas e do seletor de estilo: diferença maior que 40 | **0 pixels** |
+| Fora delas e do seletor de estilo: diferença maior que 10 | **1 pixel** (13 em 255, na borda do canto inferior direito) |
 
 Comparação da versão com o cartão branco, igual ao mock (commit anterior a esta mudança):
 
@@ -52,7 +58,7 @@ O que sobra abaixo de 10 em 255 não se vê a olho nu: a sombra lateral da pági
 do próprio mock dizer 1.284 palavras; no app, o documento tem de fato essas 1.284 palavras e
 continua abaixo. Há também variações de até 5 em 255 em alguns ícones da barra de formatação.
 
-Imagens: `fidelidade/mock-c-1180x700.png` (mock), `fidelidade/app-1180x700.png` (app atual, sem o cartão) e
+Imagens: `fidelidade/mock-c-1180x700.png` (mock), `fidelidade/app-1180x700.png` (app atual) e
 `fidelidade/diferencas-1180x700.png` (pixels com diferença maior que 40 em vermelho).
 
 ## O que a comparação corrigiu
