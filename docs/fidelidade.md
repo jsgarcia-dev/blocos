@@ -33,6 +33,9 @@ isso não acontece). Por isso ele deixou de ser usado.
   Grotesque do mock; a marca "b" fica sempre nela.
 - **16/10 — sem destaque nem alça nos blocos**: a faixa clara atrás do bloco sob o mouse e a
   alça de arrastar ("+" e "⋮⋮") do mock saíram, a pedido do usuário; para inserir blocos fica o "/".
+- **16/10 — seções recolhíveis em "linha guia"** (escolhida no companheiro visual): sem caixa nem
+  fundo; seta ▸/▾, nome com a contagem ao lado ("3 registros") e os itens recuados com uma linha
+  fina à esquerda.
 - A tela de demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto,
   pontilhado e margens de 52 px e 66 px.
 

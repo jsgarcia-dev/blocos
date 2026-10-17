@@ -6,23 +6,11 @@ import { BulletList, OrderedList, TaskList, TaskItem } from "@tiptap/extension-l
 import CodeBlock from "@tiptap/extension-code-block";
 import { TableKit } from "@tiptap/extension-table";
 import { Details, DetailsSummary, DetailsContent } from "@tiptap/extension-details";
-import type { Node as PMNode } from "@tiptap/pm/model";
 import { Callout } from "./Callout";
 import { BlocosImage } from "./BlocosImage";
-import { hasRecords } from "./Registros";
 
 export interface SchemaOptions {
   resolveImageSrc?: (src: string) => string;
-}
-
-/** Conta itens de lista dentro de um bloco (usado no selo "N itens" das seções recolhíveis). */
-export function countItems(node: PMNode): number {
-  let n = 0;
-  node.descendants((child) => {
-    if (child.type.name === "listItem" || child.type.name === "taskItem") n++;
-    return true;
-  });
-  return n;
 }
 
 /* triângulo ▸ (vira ▾ quando a seção abre), como na opção A do mock de registros */
@@ -96,17 +84,11 @@ export function schemaExtensions(opts: SchemaOptions = {}): AnyExtension[] {
     Details.configure({
       persist: false,
       HTMLAttributes: { class: "toggle-block" },
-      renderToggleButton: ({ element, isOpen, node }) => {
+      // a contagem ("3 registros") fica ao lado do nome, desenhada por Registros.ts
+      renderToggleButton: ({ element, isOpen }) => {
         element.className = "toggle-btn";
         element.setAttribute("aria-label", isOpen ? "Recolher seção" : "Expandir seção");
         if (!element.firstChild) element.innerHTML = CHEVRON;
-        const wrapper = element.parentElement;
-        if (wrapper) {
-          const n = countItems(node);
-          // com números (telefone, CPF…) os itens são registros
-          const [um, varios] = hasRecords(node) ? ["registro", "registros"] : ["item", "itens"];
-          wrapper.setAttribute("data-count", n ? `${n} ${n === 1 ? um : varios}` : "");
-        }
       },
     }),
     DetailsSummary,

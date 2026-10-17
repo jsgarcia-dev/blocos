@@ -66,6 +66,18 @@ export function hasRecords(details: PMNode): boolean {
   return found;
 }
 
+/** Selo da seção ao lado do nome: "3 registros" (com números) ou "2 itens"; vazio sem itens. */
+export function sectionLabel(details: PMNode): string {
+  let n = 0;
+  details.descendants((c) => {
+    if (c.type.name === "listItem" || c.type.name === "taskItem") n++;
+    return true;
+  });
+  if (!n) return "";
+  const [um, varios] = hasRecords(details) ? ["registro", "registros"] : ["item", "itens"];
+  return `${n} ${n === 1 ? um : varios}`;
+}
+
 /** Linhas de um texto colado, sem as vazias. */
 export function pastedLines(text: string): string[] {
   return text
@@ -78,6 +90,25 @@ export function pastedLines(text: string): string[] {
 function decorations(doc: PMNode): DecorationSet {
   const decos: Decoration[] = [];
   doc.descendants((node, pos) => {
+    // selo com a contagem logo depois do nome da seção (dentro da linha do título)
+    if (node.type.name === "details" && node.firstChild?.type.name === "detailsSummary") {
+      const label = sectionLabel(node);
+      if (label) {
+        decos.push(
+          Decoration.widget(
+            pos + 2 + node.firstChild.content.size,
+            () => {
+              const s = document.createElement("span");
+              s.className = "sec-count";
+              s.textContent = label;
+              s.contentEditable = "false";
+              return s;
+            },
+            { side: 1, ignoreSelection: true, key: `sec-count:${label}` },
+          ),
+        );
+      }
+    }
     if (!node.isTextblock) return true;
     if (!inRecordsGroup(doc.resolve(pos + 1))) return false;
     // posição de cada caractere do texto do parágrafo no documento
