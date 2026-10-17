@@ -3,26 +3,45 @@ export interface Swatch {
   value: string | null;
 }
 
-/** Cores de texto (null = cor padrão). */
+/** Cores de texto (null = cor padrão); legíveis nos temas claro e escuro. */
 export const TEXT_COLORS: Swatch[] = [
   { name: "Padrão", value: null },
-  { name: "Vermelho", value: "#E5484D" },
-  { name: "Laranja", value: "#F76B15" },
-  { name: "Verde", value: "#2F9E44" },
-  { name: "Azul", value: "#1C7ED6" },
-  { name: "Roxo", value: "#7048E8" },
+  { name: "Cinza-escuro", value: "#495057" },
   { name: "Cinza", value: "#868E96" },
+  { name: "Marrom", value: "#9C6644" },
+  { name: "Vermelho", value: "#E5484D" },
+  { name: "Rosa", value: "#D6336C" },
+  { name: "Laranja", value: "#F76B15" },
+  { name: "Âmbar", value: "#E8A100" },
+  { name: "Oliva", value: "#7C8B1E" },
+  { name: "Verde", value: "#2F9E44" },
+  { name: "Verde-água", value: "#0CA678" },
+  { name: "Ciano", value: "#1098AD" },
+  { name: "Azul", value: "#1C7ED6" },
+  { name: "Índigo", value: "#4263EB" },
+  { name: "Roxo", value: "#7048E8" },
+  { name: "Violeta", value: "#AE3EC9" },
+  { name: "Magenta", value: "#C2255C" },
+  { name: "Azul-marinho", value: "#1B3A6B" },
 ];
 
 /** Cores de destaque. O amarelo é o padrão e vira `==texto==` no Markdown. */
 export const DEFAULT_HIGHLIGHT = "#FFE066";
 export const HIGHLIGHT_COLORS: Swatch[] = [
   { name: "Amarelo", value: DEFAULT_HIGHLIGHT },
-  { name: "Verde", value: "#C3F0C8" },
-  { name: "Azul", value: "#D0E2FF" },
-  { name: "Rosa", value: "#FFD1DC" },
   { name: "Laranja", value: "#FFD8BF" },
+  { name: "Vermelho", value: "#FFC9C9" },
+  { name: "Rosa", value: "#FFD1DC" },
+  { name: "Lilás", value: "#F3D9FA" },
   { name: "Roxo", value: "#E5DBFF" },
+  { name: "Índigo", value: "#DBE4FF" },
+  { name: "Azul", value: "#D0E2FF" },
+  { name: "Ciano", value: "#C5F6FA" },
+  { name: "Verde-água", value: "#C3FAE8" },
+  { name: "Verde", value: "#C3F0C8" },
+  { name: "Lima", value: "#E9FAC8" },
+  { name: "Areia", value: "#F1E7D0" },
+  { name: "Cinza", value: "#E9ECEF" },
 ];
 
 /** Normaliza `rgb(…)`, `#abc` e `#aabbcc` para `#AABBCC`. */

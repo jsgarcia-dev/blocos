@@ -1044,7 +1044,7 @@ kbd {
 }
 
 .color-pop {
-  width: 252px;
+  width: 254px;
   padding: 10px;
 }
 
@@ -1069,8 +1069,8 @@ kbd {
 }
 
 .sw {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 8px;
   border: 1px solid var(--ln);
   display: grid;
@@ -1090,6 +1090,21 @@ kbd {
   box-shadow:
     0 0 0 2px var(--page),
     0 0 0 4px var(--ac);
+}
+
+/* "outra cor…": abre o seletor de cores do sistema */
+.sw.custom {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: conic-gradient(#e5484d, #f59f00, #2f9e44, #1098ad, #4263eb, #ae3ec9, #e5484d);
+}
+
+.sw.custom input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .sw.none {

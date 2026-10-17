@@ -126,6 +126,8 @@ export function Ribbon() {
   const off = !editor || isTxt;
   const [styleOpen, setStyleOpen] = useState(false);
   const [colorOpen, setColorOpen] = useState(false);
+  const [textOpen, setTextOpen] = useState(false);
+  const textRef = useRef<HTMLButtonElement>(null);
   const [exportOpen, setExportOpen] = useState(false);
   const styleRef = useRef<HTMLButtonElement>(null);
   const colorRef = useRef<HTMLButtonElement>(null);
@@ -198,7 +200,7 @@ export function Ribbon() {
         </RB>
       </div>
       <div className="grp">
-        <RB className="col" title="Cor do texto" disabled={off} onClick={() => applyTextColor(lastText)}>
+        <RB className="col" title="Cor do texto" disabled={off} btnRef={textRef} on={textOpen} onClick={() => setTextOpen(!textOpen)}>
           <span className="A">A</span>
           <span className="bar" style={{ background: lastText }} />
         </RB>
@@ -213,7 +215,7 @@ export function Ribbon() {
           {/* no mock o amarelo padrão aparece mais vivo na barrinha (#FFD43B) */}
           <span className="bar" style={{ background: toHex(lastHl) === "#FFE066" ? "#FFD43B" : lastHl }} />
         </RB>
-        <RB className="mini" title="Mais cores" disabled={off} btnRef={colorRef} onClick={() => setColorOpen(!colorOpen)}>
+        <RB className="mini" title="Cores de destaque" disabled={off} btnRef={colorRef} onClick={() => setColorOpen(!colorOpen)}>
           <MI name="chev-d" size={17} />
         </RB>
       </div>
@@ -270,7 +272,8 @@ export function Ribbon() {
         ))}
       </Popover>
 
-      <Popover anchor={colorRef} open={colorOpen} onClose={() => setColorOpen(false)} className="color-pop">
+      {/* cor do texto: o botão "A" abre as cores (o destaque tem as suas, na setinha do marca-texto) */}
+      <Popover anchor={textRef} open={textOpen} onClose={() => setTextOpen(false)} className="color-pop">
         <div className="cp-t">Cor do texto</div>
         <div className="cp-row">
           {TEXT_COLORS.map((c) => (
@@ -281,13 +284,19 @@ export function Ribbon() {
               style={{ color: c.value ?? "var(--ink)" }}
               onClick={() => {
                 applyTextColor(c.value);
-                setColorOpen(false);
+                setTextOpen(false);
               }}
             >
               A
             </button>
           ))}
+          <label className="sw custom" title="Outra cor…">
+            <input type="color" value={(toHex(st.textColor) ?? toHex(lastText) ?? "#E5484D").toLowerCase()} onChange={(e) => applyTextColor(e.target.value)} />
+          </label>
         </div>
+      </Popover>
+
+      <Popover anchor={colorRef} open={colorOpen} onClose={() => setColorOpen(false)} className="color-pop">
         <div className="cp-t">Destaque</div>
         <div className="cp-row">
           {HIGHLIGHT_COLORS.map((c) => (
@@ -310,6 +319,9 @@ export function Ribbon() {
               setColorOpen(false);
             }}
           />
+          <label className="sw custom" title="Outra cor…">
+            <input type="color" value={(toHex(st.highlight) ?? toHex(lastHl) ?? "#FFE066").toLowerCase()} onChange={(e) => applyHighlight(e.target.value)} />
+          </label>
         </div>
       </Popover>
 
