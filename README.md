@@ -10,11 +10,12 @@ Roda no Linux e no Windows.
 - **Abas** em formato de pílula, com ponto laranja quando há algo não salvo e etiqueta `TXT` para texto puro.
 - **Reabre tudo como você deixou**: abas, aba ativa, posição do cursor e rolagem — inclusive abas novas que nunca foram salvas.
 - **Salva sozinho** logo depois que você para de digitar (dá para desligar nas Preferências).
-- **Formatação** em `.md`: títulos, negrito, itálico, sublinhado, tachado, cor do texto, **destaque colorido**, listas, lista de tarefas, links, tabelas, imagens, citação, código, divisor.
+- **Formatação** em `.md`: títulos, negrito, itálico, sublinhado, tachado, cor do texto, **destaque colorido**, **fonte de um trecho**, listas, lista de tarefas, links, tabelas, imagens, citação, código, divisor.
 - **Digite `/`** para inserir blocos: tabela, lista de tarefas, **seção recolhível**, **caixa de destaque**, títulos…
 - **Colar entra sempre como texto puro**: sem a cor, o fundo, o negrito ou os títulos de onde o texto veio (imagens coladas continuam virando imagem).
 - **Seções recolhíveis** para grupos de registros (ex.: um por banco): Enter no nome do grupo vai para a lista, colar várias linhas cria um registro por linha, números longos (telefone, CPF) ganham destaque — sem mudar o que foi digitado — e o selo conta os registros.
-- **Selos abaixo do título** (H1): quando foi editado, quantos grupos e quantos registros.
+- **Indicações em árvore** (`/` → Indicações): quem convidou quem, em quantos níveis precisar. Cada conta numa linha (ex.: `A1 (11) 90000-0001`), **Tab** a faz convidada da conta de cima e **Shift+Tab** sobe um nível; linhas ligam as contas, cada galho abre e fecha pela seta, as contas de cima mostram quantas convidaram e o nome da árvore mostra quantas contas e quantos níveis ela tem. No arquivo é uma lista com recuo.
+- **Selos abaixo do título** (H1): quando foi editado, quantos grupos, quantos registros e quantas contas nas árvores de indicações.
 - **Lateral**: busca em tudo, "Continuar de onde parou", fixados, recentes e pastas.
 - **Busca geral (Ctrl+P)** nos nomes e no conteúdo de todos os `.md`/`.txt` das suas pastas (ignora acentos).
 - **Localizar e substituir (Ctrl+F / Ctrl+H)**.
@@ -37,9 +38,11 @@ Roda no Linux e no Windows.
 | Destaque amarelo | `==texto==` |
 | Destaque de outra cor | `<mark style="background-color: #C3F0C8">texto</mark>` |
 | Cor do texto | `<span style="color: #E5484D">texto</span>` |
+| Fonte escolhida para um trecho | `<span style="font-family: 'Literata', serif">texto</span>` |
 | Sublinhado | `<u>texto</u>` |
 | Caixa de destaque | `> [!NOTE]` (alerta do GitHub) |
 | Seção recolhível | `<details><summary>…</summary> … </details>` |
+| Indicações em árvore | `<details class="arvore"><summary>Indicações</summary>` + lista com recuo |
 | Lista de tarefas | `- [ ] item` / `- [x] item` |
 | Quebra de linha simples | uma quebra de linha comum |
 

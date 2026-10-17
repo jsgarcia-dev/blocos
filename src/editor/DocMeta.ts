@@ -2,6 +2,7 @@ import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
 import { formatEdited } from "../lib/format";
+import { treeStats } from "./Arvore";
 
 export interface DocMetaOptions {
   /** Momento da última edição (ou modificação no disco), se houver. */
@@ -14,6 +15,7 @@ const CLOCK =
 /**
  * Mostra selos logo abaixo do título principal (H1): quando foi editado,
  * quantos grupos (títulos H2 e seções recolhíveis) e quantos registros (itens de lista).
+ * As árvores de indicações contam à parte, em contas.
  */
 export const DocMeta = Extension.create<DocMetaOptions>({
   name: "docMeta",
@@ -60,7 +62,12 @@ export const DocMeta = Extension.create<DocMetaOptions>({
             }
             let groups = 0;
             let records = 0;
+            let accounts = 0;
             state.doc.descendants((n) => {
+              if (n.type.name === "details" && n.attrs.variant === "arvore") {
+                accounts += treeStats(n).contas;
+                return false;
+              }
               if ((n.type.name === "heading" && n.attrs.level === 2) || n.type.name === "details") groups++;
               if (n.type.name === "listItem" || n.type.name === "taskItem") records++;
               return true;
@@ -70,6 +77,7 @@ export const DocMeta = Extension.create<DocMetaOptions>({
             if (edited) chips.push({ icon: CLOCK, text: `Editado ${formatEdited(edited)}` });
             if (groups) chips.push({ text: `${groups} ${groups === 1 ? "grupo" : "grupos"}` });
             if (records) chips.push({ text: `${records} ${records === 1 ? "registro" : "registros"}` });
+            if (accounts) chips.push({ text: `${accounts} ${accounts === 1 ? "conta" : "contas"}` });
             if (!chips.length) return dims.length ? DecorationSet.create(state.doc, dims) : null;
             const key = "meta:" + chips.map((c) => c.text).join("|");
             const widget = Decoration.widget(

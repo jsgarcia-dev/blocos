@@ -2,7 +2,7 @@ import type { Editor, Range } from "@tiptap/core";
 import { Fragment, type Node as PMNode } from "@tiptap/pm/model";
 import { TextSelection } from "@tiptap/pm/state";
 import type { ComponentType } from "react";
-import { Heading1, Heading2, Heading3, Pilcrow } from "lucide-react";
+import { Heading1, Heading2, Heading3, Network, Pilcrow } from "lucide-react";
 import { fold } from "../lib/format";
 import { insertImageFromDialog } from "../store/actions";
 import { mockIcon } from "../components/MockIcons";
@@ -92,6 +92,36 @@ export function insertDetails(editor: Editor, range?: Range) {
   }
 }
 
+/** Bloco de indicações em árvore: seção "Indicações" com uma lista, cursor na primeira conta. */
+export function insertTree(editor: Editor, range?: Range) {
+  chain(editor, range)
+    .insertContent({
+      type: "details",
+      attrs: { variant: "arvore" },
+      content: [
+        { type: "detailsSummary", content: [{ type: "text", text: "Indicações" }] },
+        { type: "detailsContent", content: [{ type: "bulletList", content: [{ type: "listItem", content: [{ type: "paragraph" }] }] }] },
+      ],
+    })
+    .run();
+  const { $from } = editor.state.selection;
+  for (let d = $from.depth; d > 0; d--) {
+    const node = $from.node(d);
+    if (node.type.name === "details") {
+      const pos = $from.before(d);
+      // detalhes > [nome] conteúdo > lista > item > parágrafo
+      const firstItem = pos + 1 + node.firstChild!.nodeSize + 4;
+      requestAnimationFrame(() => {
+        if (editor.isDestroyed) return;
+        const dom = editor.view.nodeDOM(pos) as HTMLElement | null;
+        if (dom && !dom.classList.contains("is-open")) dom.querySelector<HTMLButtonElement>(".toggle-btn")?.click();
+        editor.chain().focus().setTextSelection(firstItem).run();
+      });
+      break;
+    }
+  }
+}
+
 export function insertCallout(editor: Editor, range?: Range) {
   const c = chain(editor, range);
   if (editor.isActive("callout")) {
@@ -108,6 +138,7 @@ export const BLOCKS: BlockItem[] = [
   { id: "h3", title: "Título 3", description: "Subtítulo", keywords: "titulo heading h3 subtitulo", icon: Heading3, run: (e, r) => chain(e, r).setHeading({ level: 3 }).run() },
   { id: "tabela", title: "Tabela", description: "Linhas e colunas", keywords: "tabela table grade colunas", icon: mockIcon("table"), run: (e, r) => chain(e, r).insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run() },
   { id: "tarefas", title: "Lista de tarefas", description: "Caixinhas para marcar", keywords: "tarefas todo checklist caixa", icon: mockIcon("checks"), run: (e, r) => chain(e, r).toggleTaskList().run() },
+  { id: "arvore", title: "Indicações (árvore)", description: "Quem convidou quem, em níveis", keywords: "arvore indicacoes indicacao convite convidou filha hierarquia niveis", icon: Network, run: (e, r) => insertTree(e, r) },
   { id: "recolhivel", title: "Seção recolhível", description: "Grupo de registros que abre e fecha", keywords: "recolhivel secao toggle details grupo esconder", icon: mockIcon("collapse"), run: (e, r) => insertDetails(e, r) },
   { id: "destaque", title: "Caixa de destaque", description: "Para avisos e lembretes", keywords: "destaque callout aviso nota lembrete", icon: mockIcon("callout"), run: (e, r) => insertCallout(e, r) },
   { id: "marcadores", title: "Lista com marcadores", description: "Itens com bolinha", keywords: "lista marcadores bullet", icon: mockIcon("list"), run: (e, r) => chain(e, r).toggleBulletList().run() },
@@ -129,7 +160,7 @@ export const BLOCKS: BlockItem[] = [
 ];
 
 /** Ordem padrão do menu "/" (as quatro primeiras aparecem como no mock). */
-const ORDER = ["tabela", "tarefas", "recolhivel", "destaque", "h1", "h2", "h3", "texto", "marcadores", "numerada", "citacao", "codigo", "divisor", "imagem"];
+const ORDER = ["tabela", "tarefas", "recolhivel", "arvore", "destaque", "h1", "h2", "h3", "texto", "marcadores", "numerada", "citacao", "codigo", "divisor", "imagem"];
 
 export function filterBlocks(query: string): BlockItem[] {
   const q = fold(query.trim());

@@ -36,6 +36,12 @@ isso não acontece). Por isso ele deixou de ser usado.
 - **16/10 — seções recolhíveis em "linha guia"** (escolhida no companheiro visual): sem caixa nem
   fundo; seta ▸/▾, nome com a contagem ao lado ("3 registros") e os itens recuados com uma linha
   fina à esquerda.
+- **17/10 — cores do texto e do destaque separadas**: na barra, "A" abre só as cores do texto e o
+  marcador abre só as de destaque, cada um com mais cores e uma cor livre.
+- **17/10 — fonte de um trecho**: botão novo na barra ("T", ao lado do estilo) para escolher a
+  fonte só do texto selecionado, com as mesmas fontes das Preferências.
+- **17/10 — indicações em árvore** (opção A do companheiro visual): bloco novo, fora do mock,
+  com as contas ligadas por linhas, seta para recolher cada galho e selos de convidadas.
 - A tela de demonstração (`?demo=mock`) usa as escolhas do mock: centralizado, compacto,
   pontilhado e margens de 52 px e 66 px.
 

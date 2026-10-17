@@ -1,7 +1,7 @@
 import type { AnyExtension } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
-import { TextStyle, Color } from "@tiptap/extension-text-style";
+import { TextStyle, Color, FontFamily } from "@tiptap/extension-text-style";
 import { BulletList, OrderedList, TaskList, TaskItem } from "@tiptap/extension-list";
 import CodeBlock from "@tiptap/extension-code-block";
 import Code from "@tiptap/extension-code";
@@ -16,6 +16,21 @@ export interface SchemaOptions {
 
 /* triângulo ▸ (vira ▾ quando a seção abre), como na opção A do mock de registros */
 const CHEVRON = '<svg viewBox="0 0 24 24"><path d="M9 6.5 16.5 12 9 17.5Z" fill="currentColor"/></svg>';
+
+/* Seção recolhível com um tipo: "arvore" é o bloco de indicações (uma lista recuada desenhada
+   como árvore). No arquivo vira <details class="arvore">; outros editores mostram a lista normal. */
+const BlocosDetails = Details.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      variant: {
+        default: null,
+        parseHTML: (el: HTMLElement) => (el.classList.contains("arvore") ? "arvore" : null),
+        renderHTML: (attrs: Record<string, unknown>) => (attrs.variant === "arvore" ? { class: "arvore" } : {}),
+      },
+    };
+  },
+});
 
 /* No editor, o nome da seção é um bloco de texto comum: o <summary> de verdade o WebKit (app no
    Linux) trata como botão, e o clique duplo e a seleção falhavam. No arquivo .md e no HTML
@@ -98,11 +113,13 @@ export function schemaExtensions(opts: SchemaOptions = {}): AnyExtension[] {
     BlocosCodeBlock,
     TextStyle,
     Color,
+    // fonte escolhida para um trecho (botão "Fonte" da barra)
+    FontFamily,
     Highlight.configure({ multicolor: true }),
     TaskList,
     TaskItem.configure({ nested: true }),
     TableKit.configure({ table: { resizable: false } }),
-    Details.configure({
+    BlocosDetails.configure({
       persist: false,
       HTMLAttributes: { class: "toggle-block" },
       // a contagem ("3 registros") fica ao lado do nome, desenhada por Registros.ts

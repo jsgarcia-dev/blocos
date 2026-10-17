@@ -24,6 +24,7 @@ describe("ida e volta sem perder nada", () => {
   const cases: Record<string, string> = {
     títulos: "# Controle de clientes\n\n## Banco Alfa — Equipe Norte\n\n### Tarefas\n",
     "código com cor e negrito": "- <span style=\"color: #E5484D\">`11900000001`</span> Ana **`x`** `y`\n",
+    "árvore de indicações": "<details class=\"arvore\">\n<summary>Indicações</summary>\n\n- A1 11900000001\n  - G1 11900000002\n    - G2 11900000003\n  - G4 21900000006\n- B1 41900000007\n\n</details>\n",
     "nome da seção com cor, destaque e negrito": "<details>\n<summary><span style=\"color: #1C7ED6\"><mark style=\"background-color: #C3F0C8\">Pic</mark></span><strong>Pay</strong> <mark>&lt;novo&gt;</mark></summary>\n\n- item\n\n</details>\n",
     "negrito, itálico, tachado e código": "Texto **forte**, *leve*, ~~riscado~~ e `AB1`.\n",
     sublinhado: "Um <u>sublinhado</u> aqui.\n",
@@ -239,3 +240,29 @@ describe("salvar sem perdas: o que você não editou fica idêntico", () => {
     expect(toDoc(out).textContent).toContain("Veja site");
   });
 });
+
+describe("fonte escolhida para um trecho", () => {
+  it("grava a fonte (e a cor) no span e relê a mesma fonte", () => {
+    const schema = getSchema(schemaExtensions());
+    const fonte = (md: string) => {
+      let f: string | null = null;
+      htmlToDocFor(md, schema).descendants((n) => {
+        const m = n.marks.find((k) => k.type.name === "textStyle");
+        if (m?.attrs.fontFamily) f = m.attrs.fontFamily;
+        return true;
+      });
+      return f as string | null;
+    };
+    const md = 'Texto <span style="color: #1C7ED6; font-family: \'Literata\', serif">com fonte</span>\n';
+    expect(fonte(md)).toMatch(/Literata/);
+    const out = docToMarkdown(htmlToDocFor(md, schema));
+    expect(out).toContain("font-family:");
+    expect(out).toContain("Literata");
+    expect(out).toContain("color: #1C7ED6");
+    expect(fonte(out)).toMatch(/Literata/);
+  });
+});
+
+function htmlToDocFor(md: string, schema: ReturnType<typeof getSchema>) {
+  return PMDOMParser.fromSchema(schema).parse(new DOMParser().parseFromString(`<body>${markdownToHtml(md)}</body>`, "text/html").body, PARSE_OPTIONS) as PMNode;
+}

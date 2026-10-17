@@ -395,6 +395,126 @@
   display: none;
 }
 
+/* ---------- indicações em árvore (seção do tipo "arvore"; Arvore.ts põe os atributos) ----------
+   raiz embaixo da seta da seção; cada conta convidada fica recuada e ligada à de cima por um "L";
+   a seta antes do texto recolhe o galho e o selo laranja diz quantas a conta convidou */
+.doc .toggle-block.arvore {
+  /* altura do "cotovelo" do L: metade da linha do item */
+  --cotovelo: calc(2px + var(--lh-li, 1.55) * 7.5px);
+}
+
+.doc .toggle-block.arvore [data-type="detailsContent"] {
+  margin-left: -24px;
+  padding-left: 0;
+  border-left: 0;
+}
+
+.doc .toggle-block.arvore ul:not([data-type="taskList"]) {
+  padding: 0;
+}
+
+.doc .toggle-block.arvore ul:not([data-type="taskList"]) > li {
+  padding: 2px 0 2px 20px;
+}
+
+/* sem marcador: a raiz não tem linha; as convidadas têm a linha vertical do galho */
+.doc .toggle-block.arvore ul:not([data-type="taskList"]) > li::before {
+  display: none;
+}
+
+/* galho das convidadas: começa embaixo da seta da conta de cima */
+.doc .toggle-block.arvore li > ul:not([data-type="taskList"]) {
+  margin-left: -13px;
+}
+
+.doc .toggle-block.arvore li > ul:not([data-type="taskList"]) > li {
+  padding-left: 34px;
+}
+
+.doc .toggle-block.arvore li > ul:not([data-type="taskList"]) > li::before {
+  display: block;
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  border-left: 1.5px solid var(--ln-arvore);
+}
+
+.doc .toggle-block.arvore li > ul:not([data-type="taskList"]) > li:last-child::before {
+  bottom: auto;
+  height: var(--cotovelo);
+}
+
+.doc .toggle-block.arvore li > ul:not([data-type="taskList"]) > li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: var(--cotovelo);
+  width: 12px;
+  border-top: 1.5px solid var(--ln-arvore);
+}
+
+/* seta do galho (só em quem convidou alguém), antes do texto */
+.doc .toggle-block.arvore li[data-galho] > p::before {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: calc(var(--cotovelo) - 2.5px);
+  border-left: 4.5px solid transparent;
+  border-right: 4.5px solid transparent;
+  border-top: 5.5px solid var(--ink2);
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+
+.doc .toggle-block.arvore li > ul > li[data-galho] > p::before {
+  left: 17px;
+}
+
+.doc .toggle-block.arvore li[data-galho="fechado"] > p::before {
+  transform: rotate(-90deg);
+}
+
+.doc .toggle-block.arvore li[data-galho="fechado"] > :is(ul, ol) {
+  display: none;
+}
+
+/* quantas a conta convidou */
+.doc .toggle-block.arvore li > p[data-kids]::after {
+  content: attr(data-kids);
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 7px;
+  border-radius: 99px;
+  background: var(--acs);
+  color: var(--ac);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.7;
+  vertical-align: 1.5px;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* código da conta ("A1", "G2") em negrito; as contas da raiz em laranja */
+.doc .arv-cod {
+  font-weight: 700;
+  color: var(--ink);
+  /* um respiro entre o código e o número, como no mock */
+  margin-right: 3px;
+}
+
+.doc .toggle-block.arvore li.arv-raiz > p .arv-cod {
+  color: var(--ac);
+}
+
 /* conteúdo recuado com a linha guia, que nasce embaixo do centro da seta:
    volta a largura da seta + espaço (16 + 8 px) e avança 7 px */
 .doc [data-type="detailsContent"] {

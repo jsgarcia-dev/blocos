@@ -6,6 +6,7 @@ import { SlashCommand } from "./SlashCommand";
 import { SearchHighlight } from "./SearchHighlight";
 import { FatCaret } from "./FatCaret";
 import { Registros } from "./Registros";
+import { Arvore, inTree } from "./Arvore";
 import { platform } from "../lib/platform";
 import { dirname, isAbsolute, joinPath } from "../lib/paths";
 
@@ -38,11 +39,15 @@ export function buildExtensions(o: BuildOptions): AnyExtension[] {
         if (node.type.name === "heading") return node.attrs.level === 1 && pos === 0 ? "Título" : `Título ${node.attrs.level}`;
         if (node.type.name === "detailsSummary") return "Nome do grupo (ex.: banco)";
         if (node.type.name !== "paragraph") return "";
-        const $pos = editor.state.doc.resolve(pos);
+        // durante uma mudança o editor ainda pode estar com o documento de antes: só usa a posição
+        // se ela apontar para esta mesma linha (senão, sem dica agora; ela volta na próxima atualização)
+        const doc = editor.state.doc;
+        if (pos > doc.content.size || doc.nodeAt(pos) !== node) return "";
+        const $pos = doc.resolve(pos);
         const parent = $pos.parent.type.name;
         // linha de registro dentro de uma seção recolhível
         if (parent === "listItem" && Array.from({ length: $pos.depth }, (_, i) => $pos.node(i + 1).type.name).includes("detailsContent")) {
-          return "Número  Nome completo  CPF";
+          return inTree($pos) ? "Código e número (ex.: A1 11 90000-0001) · Tab vira convidada da de cima" : "Número  Nome completo  CPF";
         }
         return ["doc", "detailsContent", "callout"].includes(parent) ? "Digite “/” para inserir blocos…" : "";
       },
@@ -52,5 +57,6 @@ export function buildExtensions(o: BuildOptions): AnyExtension[] {
     SearchHighlight.configure({ onChange: o.onSearch }),
     FatCaret,
     Registros,
+    Arvore,
   ];
 }

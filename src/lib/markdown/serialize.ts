@@ -35,6 +35,15 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+/** Estilo de um trecho com cor e/ou fonte escolhidas na barra ("" se nenhuma). */
+function textStyleCss(attrs: Record<string, unknown>): string {
+  const parts: string[] = [];
+  if (attrs.color) parts.push(`color: ${toHex(String(attrs.color))}`);
+  // aspas simples: o valor fica dentro de style="…"
+  if (attrs.fontFamily) parts.push(`font-family: ${String(attrs.fontFamily).replace(/"/g, "'")}`);
+  return parts.join("; ");
+}
+
 /** Uma marca (negrito, cor, destaque…) em HTML, em volta de `inner`. */
 function markToHtml(mark: Mark, inner: string): string {
   const a = mark.attrs;
@@ -51,8 +60,10 @@ function markToHtml(mark: Mark, inner: string): string {
       return `<code>${inner}</code>`;
     case "highlight":
       return isDefaultHighlight(a.color) ? `<mark>${inner}</mark>` : `<mark style="background-color: ${toHex(a.color)}">${inner}</mark>`;
-    case "textStyle":
-      return a.color ? `<span style="color: ${toHex(a.color)}">${inner}</span>` : inner;
+    case "textStyle": {
+      const css = textStyleCss(a);
+      return css ? `<span style="${css}">${inner}</span>` : inner;
+    }
     case "link":
       return a.href ? `<a href="${String(a.href).replace(/"/g, "&quot;")}">${inner}</a>` : inner;
     default:
@@ -224,7 +235,7 @@ serializer = new MarkdownSerializer(
     tableHeader() {},
     details(state, node) {
       const summary = node.firstChild?.type.name === "detailsSummary" ? node.firstChild : null;
-      state.write("<details>");
+      state.write(node.attrs.variant === "arvore" ? '<details class="arvore">' : "<details>");
       state.ensureNewLine();
       state.write(`<summary>${summary && summary.textContent.trim() ? inlineToHtml(summary) : "Detalhes"}</summary>`);
       state.closeBlock(node.firstChild ?? node);
@@ -251,8 +262,11 @@ serializer = new MarkdownSerializer(
       expelEnclosingWhitespace: true,
     },
     textStyle: {
-      open: (_s, mark) => (mark.attrs.color ? `<span style="color: ${toHex(mark.attrs.color)}">` : ""),
-      close: (_s, mark) => (mark.attrs.color ? "</span>" : ""),
+      open: (_s, mark) => {
+        const css = textStyleCss(mark.attrs);
+        return css ? `<span style="${css}">` : "";
+      },
+      close: (_s, mark) => (textStyleCss(mark.attrs) ? "</span>" : ""),
       mixable: true,
       expelEnclosingWhitespace: true,
     },

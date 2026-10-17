@@ -19,6 +19,14 @@ export const BUNDLED_FONTS: { family: string; note: string }[] = [
 
 export const fontLabel = (family: string) => (family === SYSTEM_UI ? "Fonte do sistema" : family);
 
+/** Nome da fonte a partir de um `font-family` ("\"Inter\", sans-serif" → "Inter"); null se vazio. */
+export function familyFromStack(stack: string | null | undefined): string | null {
+  if (!stack) return null;
+  const first = stack.split(",")[0].replace(/["']/g, "").trim();
+  if (!first) return null;
+  return first === "system-ui" ? SYSTEM_UI : first;
+}
+
 /** Valor de `font-family` para a fonte escolhida (com reserva genérica para caracteres que ela não tenha). */
 export function fontStack(family: string): string {
   if (family === SYSTEM_UI) return 'system-ui, "Segoe UI", sans-serif';

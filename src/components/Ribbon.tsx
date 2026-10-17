@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useEditorState } from "@tiptap/react";
 import type { Editor } from "@tiptap/core";
-import { Check, FileCode, FolderOpen, Printer, Save } from "lucide-react";
+import { Check, FileCode, FolderOpen, Printer, Save, Type } from "lucide-react";
 import { HIGHLIGHT_COLORS, TEXT_COLORS, toHex } from "../lib/colors";
 import { handles } from "../lib/handles";
 import { platform } from "../lib/platform";
@@ -12,6 +12,8 @@ import { insertCallout, insertDetails } from "../editor/blocks";
 import { exportHtml } from "../lib/exporter";
 import { openLinkEditor } from "./Bubbles";
 import { Popover } from "./Popover";
+import { FontList } from "./FontPicker";
+import { familyFromStack, fontStack } from "../lib/fonts";
 import { MI } from "./MockIcons";
 
 const BLOCK_STYLES = [
@@ -54,6 +56,7 @@ const EMPTY = {
   callout: false,
   details: false,
   textColor: null as string | null,
+  fontFamily: null as string | null,
   highlight: null as string | null,
   block: "p" as BlockStyle,
   canUndo: false,
@@ -115,6 +118,7 @@ export function Ribbon() {
               callout: e.isActive("callout"),
               details: e.isActive("details"),
               textColor: (e.getAttributes("textStyle").color as string) ?? null,
+              fontFamily: familyFromStack(e.getAttributes("textStyle").fontFamily as string | undefined),
               highlight: e.isActive("highlight") ? ((e.getAttributes("highlight").color as string) ?? "#FFE066") : null,
               block: currentBlock(e),
               canUndo: e.can().undo(),
@@ -127,6 +131,8 @@ export function Ribbon() {
   const [styleOpen, setStyleOpen] = useState(false);
   const [colorOpen, setColorOpen] = useState(false);
   const [textOpen, setTextOpen] = useState(false);
+  const [fontOpen, setFontOpen] = useState(false);
+  const fontRef = useRef<HTMLButtonElement>(null);
   const textRef = useRef<HTMLButtonElement>(null);
   const [exportOpen, setExportOpen] = useState(false);
   const styleRef = useRef<HTMLButtonElement>(null);
@@ -159,6 +165,12 @@ export function Ribbon() {
       setState({ lastTextColor: color });
     } else editor.chain().focus().unsetColor().run();
   };
+  /** Fonte do trecho selecionado (null = volta à fonte do app). */
+  const applyFont = (family: string | null) => {
+    if (!editor) return;
+    if (family) editor.chain().focus().setFontFamily(fontStack(family)).run();
+    else editor.chain().focus().unsetFontFamily().run();
+  };
   const applyHighlight = (color: string | null) => {
     if (!editor) return;
     if (color) {
@@ -183,6 +195,9 @@ export function Ribbon() {
         <RB className="drop" title="Estilo do texto" disabled={off} btnRef={styleRef} onClick={() => setStyleOpen(!styleOpen)}>
           {isTxt ? "Texto puro" : label}
           <MI name="chev-d" size={14} />
+        </RB>
+        <RB title="Fonte do texto selecionado" on={fontOpen || !!st.fontFamily} disabled={off} btnRef={fontRef} onClick={() => setFontOpen(!fontOpen)}>
+          <Type size={16} />
         </RB>
       </div>
       <div className="grp">
@@ -270,6 +285,19 @@ export function Ribbon() {
             {st.block === b.id && <Check size={14} />}
           </button>
         ))}
+      </Popover>
+
+      {/* fonte do trecho selecionado: as mesmas fontes das Preferências, mais "Fonte do app" */}
+      <Popover anchor={fontRef} open={fontOpen} onClose={() => setFontOpen(false)} className="font-pop">
+        <div className="cp-t">Fonte do texto</div>
+        <FontList
+          appDefault
+          selected={st.fontFamily}
+          onPick={(f) => {
+            applyFont(f);
+            setFontOpen(false);
+          }}
+        />
       </Popover>
 
       {/* cor do texto: o botão "A" abre as cores (o destaque tem as suas, na setinha do marca-texto) */}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DEFAULT_FONT, SYSTEM_UI, fontLabel, fontStack } from "./fonts";
+import { DEFAULT_FONT, SYSTEM_UI, familyFromStack, fontLabel, fontStack } from "./fonts";
 
 describe("fontStack", () => {
   it("padrão e fontes com reserva do tipo certo", () => {
@@ -14,6 +14,14 @@ describe("fontStack", () => {
     expect(fontLabel(SYSTEM_UI)).toBe("Fonte do sistema");
     expect(fontLabel("Inter")).toBe("Inter");
   });
+  it("lê o nome da fonte de volta, com ou sem aspas", () => {
+    expect(familyFromStack(fontStack("Literata"))).toBe("Literata");
+    expect(familyFromStack("Inter, sans-serif")).toBe("Inter");
+    expect(familyFromStack("'Atkinson Hyperlegible Next', sans-serif")).toBe("Atkinson Hyperlegible Next");
+    expect(familyFromStack(fontStack(SYSTEM_UI))).toBe(SYSTEM_UI);
+    expect(familyFromStack(null)).toBeNull();
+  });
+
   it("nome estranho não quebra o CSS", () => {
     expect(fontStack('Fonte"; color: red')).toBe('"Fonte color: red", sans-serif');
     expect(fontStack('""')).toBe('"Bricolage Grotesque", sans-serif');

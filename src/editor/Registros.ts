@@ -2,6 +2,7 @@ import { Extension } from "@tiptap/core";
 import type { Node as PMNode, ResolvedPos } from "@tiptap/pm/model";
 import { Plugin, PluginKey, TextSelection } from "@tiptap/pm/state";
 import { Decoration, DecorationSet } from "@tiptap/pm/view";
+import { inTree, treeLabel } from "./Arvore";
 
 /**
  * Registros dentro das seções recolhíveis (ex.: um grupo por banco, uma linha por pessoa com
@@ -68,6 +69,7 @@ export function hasRecords(details: PMNode): boolean {
 
 /** Selo da seção ao lado do nome: "3 registros" (com números) ou "2 itens"; vazio sem itens. */
 export function sectionLabel(details: PMNode): string {
+  if (details.attrs.variant === "arvore") return treeLabel(details);
   let n = 0;
   details.descendants((c) => {
     if (c.type.name === "listItem" || c.type.name === "taskItem") n++;
@@ -88,7 +90,10 @@ function decorations(doc: PMNode): DecorationSet {
       if (label) decos.push(Decoration.node(pos + 1, pos + 1 + node.firstChild.nodeSize, { "data-count": label }));
     }
     if (!node.isTextblock) return true;
-    if (!inRecordsGroup(doc.resolve(pos + 1))) return false;
+    const $inside = doc.resolve(pos + 1);
+    if (!inRecordsGroup($inside)) return false;
+    // na árvore de indicações a linha é "código número", sem o "·" (como no mock)
+    const tree = inTree($inside);
     // posição de cada caractere do texto do parágrafo no documento
     const text = node.textContent;
     const at: number[] = [];
@@ -101,7 +106,7 @@ function decorations(doc: PMNode): DecorationSet {
       const to = at[t.to - 1] + 1;
       if (from === undefined || Number.isNaN(to)) continue;
       decos.push(Decoration.inline(from, to, { class: "reg-num" }));
-      if (t.sep) {
+      if (t.sep && !tree) {
         decos.push(
           Decoration.widget(
             from,

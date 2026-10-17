@@ -53,7 +53,10 @@ export function Popover({
       ref={ref}
       className={`popover ${className}`}
       style={{ left: pos?.left ?? -9999, top: pos?.top ?? -9999 }}
-      onMouseDown={(e) => e.preventDefault()}
+      // não tira o foco do editor (a seleção continua), exceto em campos de digitar (busca, cor)
+      onMouseDown={(e) => {
+        if (!(e.target as HTMLElement).closest("input, textarea, select")) e.preventDefault();
+      }}
     >
       {children}
     </div>,

@@ -773,11 +773,14 @@ kbd {
   --chip: #e9e6de;
   /* contorno das seções recolhíveis, que não têm fundo: um pouco mais forte que --ln */
   --ln-secao: #dbd5c9;
+  /* linhas da árvore de indicações */
+  --ln-arvore: #cfc8bb;
 }
 
 [data-tema="escuro"] .sheet {
   --chip: #26262c;
   --ln-secao: #2c2c33;
+  --ln-arvore: #3a3a42;
 }
 
 /* ---------------------------------------------------------- texto puro */
@@ -1893,6 +1896,32 @@ kbd {
 
 .font-btn.open svg {
   transform: rotate(180deg);
+}
+
+/* lista de fontes no botão "Fonte" da barra */
+.font-pop {
+  width: 300px;
+  padding: 10px;
+}
+
+.font-pop .font-group:first-of-type {
+  margin-top: 2px;
+}
+
+.font-pop .font-list {
+  max-height: 220px;
+}
+
+/* lista estreita: o nome da fonte fica inteiro e a descrição é que encurta */
+.font-pop .font-opt b {
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+.font-pop .font-opt em {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .font-panel {
