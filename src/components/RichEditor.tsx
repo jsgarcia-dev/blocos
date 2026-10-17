@@ -4,6 +4,7 @@ import type { Editor } from "@tiptap/core";
 import type { Node as PMNode } from "@tiptap/pm/model";
 import { buildExtensions } from "../editor/extensions";
 import { findMatches } from "../editor/SearchHighlight";
+import { htmlToPlainText, pastePlainText } from "../editor/plainPaste";
 import { PARSE_OPTIONS, createLossless, docToMarkdown, htmlToDoc, markdownToHtml, type Lossless } from "../lib/markdown";
 import { baselines, handles, pendingJumps } from "../lib/handles";
 import { platform } from "../lib/platform";
@@ -20,8 +21,6 @@ function initialToContent(c: InitialContent) {
   if (c.type === "markdown") return markdownToHtml(c.text);
   return markdownToHtml(c.text);
 }
-
-const MD_HINT = /(^|\n)\s{0,3}(#{1,6}\s|[-*+]\s|\d+[.)]\s|>\s|```|\|.+\|)|\*\*[^*]+\*\*|==[^=]+==|\[[^\]]+\]\([^)]+\)/;
 
 /** Número da "linha" (bloco de texto) que contém a posição. */
 function lineAt(doc: PMNode, pos: number): number {
@@ -100,14 +99,11 @@ function RichEditorImpl({ id, active }: { id: string; active: boolean }) {
           void insertImageFiles(ed, files, getTab(id)?.path ?? null);
           return true;
         }
-        const html = event.clipboardData?.getData("text/html");
-        const text = event.clipboardData?.getData("text/plain");
-        if (!html && text && MD_HINT.test(text) && !view.state.selection.$from.parent.type.spec.code) {
-          event.preventDefault();
-          ed.chain().focus().insertContent(markdownToHtml(text), { parseOptions: PARSE_OPTIONS }).run();
-          return true;
-        }
-        return false;
+        // texto colado entra sempre puro, sem a formatação de onde veio (plainPaste.ts)
+        const text = event.clipboardData?.getData("text/plain") || htmlToPlainText(event.clipboardData?.getData("text/html") ?? "");
+        if (!text) return false;
+        event.preventDefault();
+        return pastePlainText(view, text);
       },
       handleDrop: (view, event, _slice, moved) => {
         if (moved) return false;

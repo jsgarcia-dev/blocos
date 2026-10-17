@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { pastedLines, recordTokens } from "./Registros";
+import { recordTokens } from "./Registros";
+import { pastedLines } from "./plainPaste";
 
 const marked = (text: string) =>
   recordTokens(text).map((t) => (t.sep ? "·" : "") + text.slice(t.from, t.to));

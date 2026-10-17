@@ -12,6 +12,7 @@ Roda no Linux e no Windows.
 - **Salva sozinho** logo depois que você para de digitar (dá para desligar nas Preferências).
 - **Formatação** em `.md`: títulos, negrito, itálico, sublinhado, tachado, cor do texto, **destaque colorido**, listas, lista de tarefas, links, tabelas, imagens, citação, código, divisor.
 - **Digite `/`** para inserir blocos: tabela, lista de tarefas, **seção recolhível**, **caixa de destaque**, títulos…
+- **Colar entra sempre como texto puro**: sem a cor, o fundo, o negrito ou os títulos de onde o texto veio (imagens coladas continuam virando imagem).
 - **Seções recolhíveis** para grupos de registros (ex.: um por banco): Enter no nome do grupo vai para a lista, colar várias linhas cria um registro por linha, números longos (telefone, CPF) ganham destaque — sem mudar o que foi digitado — e o selo conta os registros.
 - **Selos abaixo do título** (H1): quando foi editado, quantos grupos e quantos registros.
 - **Lateral**: busca em tudo, "Continuar de onde parou", fixados, recentes e pastas.

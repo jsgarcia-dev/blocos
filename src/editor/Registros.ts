@@ -7,7 +7,7 @@ import { Decoration, DecorationSet } from "@tiptap/pm/view";
  * Registros dentro das seções recolhíveis (ex.: um grupo por banco, uma linha por pessoa com
  * número, nome completo e CPF). Só muda a aparência: os números longos ganham o destaque
  * cinza do mock e um "·" antes do último; o texto salvo continua como foi digitado.
- * Também faz colar várias linhas numa lista virar um item por linha.
+ * (Colar várias linhas numa lista, um item por linha, fica em plainPaste.ts.)
  */
 
 /** Números com pelo menos tantos dígitos viram destaque (telefone, CPF, conta…). */
@@ -76,15 +76,6 @@ export function sectionLabel(details: PMNode): string {
   if (!n) return "";
   const [um, varios] = hasRecords(details) ? ["registro", "registros"] : ["item", "itens"];
   return `${n} ${n === 1 ? um : varios}`;
-}
-
-/** Linhas de um texto colado, sem as vazias. */
-export function pastedLines(text: string): string[] {
-  return text
-    .replace(/\r\n?/g, "\n")
-    .split("\n")
-    .map((l) => l.replace(/\s+$/, ""))
-    .filter((l) => l.trim());
 }
 
 function decorations(doc: PMNode): DecorationSet {
@@ -190,33 +181,6 @@ export const Registros = Extension.create({
         },
         props: {
           decorations: (state) => key.getState(state),
-          // colar várias linhas dentro de uma lista: um item por linha
-          handlePaste(view, event, slice) {
-            const text = event.clipboardData?.getData("text/plain") ?? "";
-            const lines = pastedLines(text);
-            if (lines.length < 2) return false;
-            // só texto simples (parágrafos); listas, tabelas etc. coladas seguem o caminho normal
-            let simple = true;
-            slice.content.forEach((n) => {
-              if (n.type.name !== "paragraph") simple = false;
-            });
-            if (!simple) return false;
-            const { state } = view;
-            const { $from, from, to } = state.selection;
-            let d = $from.depth;
-            while (d > 0 && $from.node(d).type.name !== "listItem") d--;
-            if (!d || $from.parent.type.name !== "paragraph") return false;
-            const { listItem, paragraph } = state.schema.nodes;
-            const tr = state.tr.insertText(lines[0], from, to);
-            const after = tr.mapping.map($from.after(d));
-            const items = lines.slice(1).map((l) => listItem.create(null, paragraph.create(null, state.schema.text(l))));
-            tr.insert(after, items);
-            const end = after + items.reduce((s, n) => s + n.nodeSize, 0);
-            // cursor no fim da última linha colada
-            tr.setSelection(TextSelection.near(tr.doc.resolve(end - 2), -1));
-            view.dispatch(tr.scrollIntoView());
-            return true;
-          },
         },
       }),
     ];
