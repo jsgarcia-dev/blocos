@@ -106,8 +106,22 @@
   -webkit-box-decoration-break: clone;
 }
 
+/* o destaque tem fundo claro: a letra fica escura (inclusive no tema escuro) ... */
 .doc mark[data-color] {
   color: #17171a !important;
+}
+
+/* ... a não ser que a pessoa tenha escolhido uma cor de texto na barra (o span da cor fica por
+   fora do destaque): aí vale a cor escolhida */
+.doc span[style*="color"] mark {
+  color: inherit !important;
+}
+
+/* dentro do destaque, números dos registros, código e o trecho suave acompanham a letra do destaque */
+.doc mark .reg-num,
+.doc mark .dim,
+.doc mark code {
+  color: inherit;
 }
 
 /* listas */
@@ -337,7 +351,7 @@
   min-width: 0;
 }
 
-.doc .toggle-block summary {
+.doc .toggle-block :is(summary, .summary) {
   display: block;
   list-style: none;
   font-weight: 650;
@@ -347,8 +361,10 @@
   cursor: text;
 }
 
-/* contagem logo depois do nome ("3 registros") */
-.doc .sec-count {
+/* contagem logo depois do nome ("3 registros"), desenhada pelo CSS a partir do atributo que
+   Registros.ts põe no nome; some enquanto o nome está vazio, para não brigar com a dica */
+.doc .toggle-block .summary[data-count]::after {
+  content: attr(data-count);
   display: inline-block;
   margin-left: 8px;
   padding: 0 8px;
@@ -364,14 +380,13 @@
   pointer-events: none;
 }
 
-/* nome vazio (aparece a dica): a contagem não briga com ela */
-.ProseMirror summary.is-empty .sec-count {
+.ProseMirror .summary.is-empty::after {
   display: none;
 }
 
 /* no mock o trecho "— Equipe Sul" fica exatamente 8px depois do nome: o espaço antes do
    travessão ocupa 8px, qualquer que seja a letra antes dele */
-.doc .toggle-block summary .dim-gap {
+.doc .toggle-block :is(summary, .summary) .dim-gap {
   display: inline-block;
   width: 8px;
 }
@@ -590,7 +605,7 @@
 .ProseMirror h1.is-empty::before,
 .ProseMirror h2.is-empty::before,
 .ProseMirror h3.is-empty::before,
-.ProseMirror summary.is-empty::before {
+.ProseMirror .summary.is-empty::before {
   content: attr(data-placeholder);
   float: left;
   height: 0;

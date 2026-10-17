@@ -142,7 +142,7 @@ export const SlashCommand = Extension.create({
                 // como no mock: alinhado à esquerda da linha, 4px abaixo dela (ou acima, se não couber)
                 // o menu fica dentro da página (como no mock): rola junto com o texto
                 const place = () => {
-                  const line = props.editor.view.dom.querySelector(".slash-query")?.closest("p, li, h1, h2, h3, td, th, summary") as HTMLElement | null;
+                  const line = props.editor.view.dom.querySelector(".slash-query")?.closest("p, li, h1, h2, h3, td, th, .summary") as HTMLElement | null;
                   const sheet = host.parentElement;
                   if (!line || !sheet) return;
                   const r = line.getBoundingClientRect();

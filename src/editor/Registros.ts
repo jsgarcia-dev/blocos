@@ -81,24 +81,11 @@ export function sectionLabel(details: PMNode): string {
 function decorations(doc: PMNode): DecorationSet {
   const decos: Decoration[] = [];
   doc.descendants((node, pos) => {
-    // selo com a contagem logo depois do nome da seção (dentro da linha do título)
+    // selo com a contagem logo depois do nome da seção: vai num atributo do nome e o CSS desenha
+    // (um elemento não editável dentro da linha impedia o clique duplo de selecionar no WebKit)
     if (node.type.name === "details" && node.firstChild?.type.name === "detailsSummary") {
       const label = sectionLabel(node);
-      if (label) {
-        decos.push(
-          Decoration.widget(
-            pos + 2 + node.firstChild.content.size,
-            () => {
-              const s = document.createElement("span");
-              s.className = "sec-count";
-              s.textContent = label;
-              s.contentEditable = "false";
-              return s;
-            },
-            { side: 1, ignoreSelection: true, key: `sec-count:${label}` },
-          ),
-        );
-      }
+      if (label) decos.push(Decoration.node(pos + 1, pos + 1 + node.firstChild.nodeSize, { "data-count": label }));
     }
     if (!node.isTextblock) return true;
     if (!inRecordsGroup(doc.resolve(pos + 1))) return false;

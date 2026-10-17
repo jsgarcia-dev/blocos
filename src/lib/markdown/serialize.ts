@@ -35,6 +35,47 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+/** Uma marca (negrito, cor, destaque…) em HTML, em volta de `inner`. */
+function markToHtml(mark: Mark, inner: string): string {
+  const a = mark.attrs;
+  switch (mark.type.name) {
+    case "bold":
+      return `<strong>${inner}</strong>`;
+    case "italic":
+      return `<em>${inner}</em>`;
+    case "underline":
+      return `<u>${inner}</u>`;
+    case "strike":
+      return `<s>${inner}</s>`;
+    case "code":
+      return `<code>${inner}</code>`;
+    case "highlight":
+      return isDefaultHighlight(a.color) ? `<mark>${inner}</mark>` : `<mark style="background-color: ${toHex(a.color)}">${inner}</mark>`;
+    case "textStyle":
+      return a.color ? `<span style="color: ${toHex(a.color)}">${inner}</span>` : inner;
+    case "link":
+      return a.href ? `<a href="${String(a.href).replace(/"/g, "&quot;")}">${inner}</a>` : inner;
+    default:
+      return inner;
+  }
+}
+
+/**
+ * Texto com formatação em HTML: usado no nome das seções recolhíveis, que fica dentro de
+ * <summary>, onde o Markdown não vale (antes só o texto era gravado e a cor/destaque se perdiam).
+ */
+function inlineToHtml(node: PMNode): string {
+  let out = "";
+  node.forEach((child) => {
+    if (!child.isText) return;
+    let html = escapeHtml(child.text ?? "");
+    // as marcas vêm da mais de fora para a mais de dentro: embrulha de dentro para fora
+    for (const mark of [...child.marks].reverse()) html = markToHtml(mark, html);
+    out += html;
+  });
+  return out;
+}
+
 /** Link "solto" (o texto é o próprio endereço): gravamos só o texto, como foi digitado. */
 function isPlainUrl(link: Mark, parent: PMNode, index: number): boolean {
   const href: string = link.attrs.href ?? "";
@@ -182,10 +223,10 @@ serializer = new MarkdownSerializer(
     tableCell() {},
     tableHeader() {},
     details(state, node) {
-      const summary = node.firstChild?.type.name === "detailsSummary" ? node.firstChild.textContent : "";
+      const summary = node.firstChild?.type.name === "detailsSummary" ? node.firstChild : null;
       state.write("<details>");
       state.ensureNewLine();
-      state.write(`<summary>${escapeHtml(summary.trim() || "Detalhes")}</summary>`);
+      state.write(`<summary>${summary && summary.textContent.trim() ? inlineToHtml(summary) : "Detalhes"}</summary>`);
       state.closeBlock(node.firstChild ?? node);
       node.forEach((child) => {
         if (child.type.name === "detailsContent") state.renderContent(child);

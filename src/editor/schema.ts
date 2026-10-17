@@ -17,6 +17,20 @@ export interface SchemaOptions {
 /* triângulo ▸ (vira ▾ quando a seção abre), como na opção A do mock de registros */
 const CHEVRON = '<svg viewBox="0 0 24 24"><path d="M9 6.5 16.5 12 9 17.5Z" fill="currentColor"/></svg>';
 
+/* No editor, o nome da seção é um bloco de texto comum: o <summary> de verdade o WebKit (app no
+   Linux) trata como botão, e o clique duplo e a seleção falhavam. No arquivo .md e no HTML
+   exportado continua <summary> (renderHTML não muda). */
+const BlocosDetailsSummary = DetailsSummary.extend({
+  addNodeView() {
+    return () => {
+      const dom = document.createElement("div");
+      dom.className = "summary";
+      dom.setAttribute("data-type", "detailsSummary");
+      return { dom, contentDOM: dom };
+    };
+  },
+});
+
 /* Código no meio do texto que aceita cor, destaque, negrito etc. junto (o original descarta
    qualquer outro formato, então a cor escolhida na barra não pegava em números colados como código). */
 const BlocosCode = Code.extend({ excludes: "" });
@@ -98,7 +112,7 @@ export function schemaExtensions(opts: SchemaOptions = {}): AnyExtension[] {
         if (!element.firstChild) element.innerHTML = CHEVRON;
       },
     }),
-    DetailsSummary,
+    BlocosDetailsSummary,
     DetailsContent,
     Callout,
     BlocosImage.configure({ resolveSrc: opts.resolveImageSrc ?? ((s: string) => s) }),
