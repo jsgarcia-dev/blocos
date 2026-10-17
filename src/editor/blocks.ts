@@ -1,4 +1,6 @@
 import type { Editor, Range } from "@tiptap/core";
+import { Fragment, type Node as PMNode } from "@tiptap/pm/model";
+import { TextSelection } from "@tiptap/pm/state";
 import type { ComponentType } from "react";
 import { Heading1, Heading2, Heading3, Pilcrow } from "lucide-react";
 import { fold } from "../lib/format";
@@ -19,7 +21,58 @@ const chain = (editor: Editor, range?: Range) => {
   return range ? c.deleteRange(range) : c;
 };
 
+/** Abre a seção que começa em `pos` e põe o cursor no nome dela (ex.: o banco). */
+function openDetailsAndFocusTitle(editor: Editor, pos: number) {
+  requestAnimationFrame(() => {
+    // a aba pode ter sido fechada nesse meio-tempo
+    if (editor.isDestroyed) return;
+    const dom = editor.view.nodeDOM(pos) as HTMLElement | null;
+    if (dom && !dom.classList.contains("is-open")) dom.querySelector<HTMLButtonElement>(".toggle-btn")?.click();
+    editor.chain().focus().setTextSelection(pos + 2).run();
+  });
+}
+
+/** Linhas de um parágrafo (separadas por quebra de linha), sem as vazias. */
+function paragraphLines(p: PMNode): Fragment[] {
+  const lines: PMNode[][] = [[]];
+  p.forEach((child) => {
+    if (child.type.name === "hardBreak") lines.push([]);
+    else lines[lines.length - 1].push(child);
+  });
+  return lines.map((l) => Fragment.from(l)).filter((f) => f.textBetween(0, f.size).trim() !== "");
+}
+
+/**
+ * Põe os blocos selecionados dentro de uma seção recolhível nova, com o nome vazio para a pessoa
+ * digitar. Se forem só linhas de texto, cada linha vira um item da lista (um registro).
+ * Devolve false quando não há seleção (aí a seção é criada vazia).
+ */
+export function wrapSelectionInDetails(editor: Editor): boolean {
+  const { state, view } = editor;
+  const { selection, schema } = state;
+  if (selection.empty) return false;
+  const { details, detailsSummary, detailsContent, bulletList, listItem, paragraph } = schema.nodes;
+  // blocos inteiros cobertos pela seleção, num lugar onde cabe uma seção
+  const range = selection.$from.blockRange(selection.$to, (n) => !!n.type.contentMatch.matchType(details));
+  if (!range) return false;
+  const blocks: PMNode[] = [];
+  for (let i = range.startIndex; i < range.endIndex; i++) blocks.push(range.parent.child(i));
+  let inner: PMNode[] = blocks;
+  if (blocks.every((b) => b.type === paragraph)) {
+    const items = blocks.flatMap(paragraphLines).map((line) => listItem.create(null, paragraph.create(null, line)));
+    inner = [bulletList.create(null, items.length ? items : [listItem.create(null, paragraph.create())])];
+  }
+  const node = details.create(null, [detailsSummary.create(), detailsContent.create(null, inner)]);
+  const tr = state.tr.replaceWith(range.start, range.end, node);
+  tr.setSelection(TextSelection.create(tr.doc, range.start + 2)).scrollIntoView();
+  view.dispatch(tr);
+  openDetailsAndFocusTitle(editor, range.start);
+  return true;
+}
+
 export function insertDetails(editor: Editor, range?: Range) {
+  // com texto selecionado (botão da barra), o conteúdo vai para dentro da seção nova
+  if (!range && wrapSelectionInDetails(editor)) return;
   chain(editor, range)
     .insertContent({
       type: "details",
@@ -30,18 +83,13 @@ export function insertDetails(editor: Editor, range?: Range) {
     })
     .run();
   // abre a seção recém-criada e põe o cursor no nome do grupo (ex.: o banco)
-  requestAnimationFrame(() => {
-    const { $from } = editor.state.selection;
-    for (let d = $from.depth; d > 0; d--) {
-      if ($from.node(d).type.name === "details") {
-        const start = $from.before(d);
-        const dom = editor.view.nodeDOM(start) as HTMLElement | null;
-        if (dom && !dom.classList.contains("is-open")) dom.querySelector<HTMLButtonElement>(".toggle-btn")?.click();
-        editor.chain().focus().setTextSelection(start + 2).run();
-        break;
-      }
+  const { $from } = editor.state.selection;
+  for (let d = $from.depth; d > 0; d--) {
+    if ($from.node(d).type.name === "details") {
+      openDetailsAndFocusTitle(editor, $from.before(d));
+      break;
     }
-  });
+  }
 }
 
 export function insertCallout(editor: Editor, range?: Range) {
