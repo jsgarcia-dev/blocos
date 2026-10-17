@@ -79,3 +79,11 @@ describe("pastePlainText", () => {
     ]);
   });
 });
+
+describe("cor do texto sobre código", () => {
+  it("a cor escolhida na barra pega também em texto com destaque de código", () => {
+    const ed = make("<p><code>11900000001</code> Ana</p>");
+    ed.chain().setTextSelection({ from: 1, to: 12 }).setColor("#1C7ED6").run();
+    expect(marks(ed, "11900000001").sort()).toEqual(["code", "textStyle"]);
+  });
+});

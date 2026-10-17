@@ -23,6 +23,7 @@ function roundTrip(md: string): string {
 describe("ida e volta sem perder nada", () => {
   const cases: Record<string, string> = {
     títulos: "# Controle de clientes\n\n## Banco Alfa — Equipe Norte\n\n### Tarefas\n",
+    "código com cor e negrito": "- <span style=\"color: #E5484D\">`11900000001`</span> Ana **`x`** `y`\n",
     "negrito, itálico, tachado e código": "Texto **forte**, *leve*, ~~riscado~~ e `AB1`.\n",
     sublinhado: "Um <u>sublinhado</u> aqui.\n",
     "destaque amarelo": "Status: ==conferir documento==\n",

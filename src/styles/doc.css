@@ -313,6 +313,14 @@
   color: var(--ink);
 }
 
+/* a cor de texto escolhida na barra (span com style color) vale também para os números dos
+   registros, o trecho suave dos títulos ("— Equipe…") e o código, que têm cor própria */
+.doc span[style*="color"] .reg-num,
+.doc span[style*="color"] .dim,
+.doc span[style*="color"] code {
+  color: inherit;
+}
+
 .doc .reg-dot {
   color: var(--mu);
   margin-right: 0.4em;
