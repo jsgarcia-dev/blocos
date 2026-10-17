@@ -454,6 +454,15 @@ kbd {
   color: #e4e4e7;
 }
 
+/* ação em texto no título da seção ("LIMPAR" nos recentes) */
+.sec.with-act button.txt {
+  width: auto;
+  padding: 0 6px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
 .it {
   display: flex;
   align-items: center;
@@ -520,6 +529,11 @@ kbd {
 
 .it:hover .hover-act {
   display: grid;
+}
+
+/* fixar e "×" lado a lado */
+.it .hover-act + .hover-act {
+  margin-left: 0;
 }
 
 .it:hover .badge {

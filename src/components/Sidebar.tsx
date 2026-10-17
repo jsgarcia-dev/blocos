@@ -1,13 +1,24 @@
 import { useCallback, useEffect, useState } from "react";
-import { FolderOpen, PinOff } from "lucide-react";
+import { FolderOpen, PinOff, X } from "lucide-react";
 import { platform, type FolderEntry } from "../lib/platform";
 import { basename, extname, stripExt } from "../lib/paths";
 import { formatAgo } from "../lib/format";
 import { activeTab, setState, useApp } from "../store/store";
-import { addFolder, forgetRecent, openPaths, removeFolder, togglePin } from "../store/actions";
+import { addFolder, clearRecents, forgetRecent, openPaths, removeFolder, togglePin } from "../store/actions";
 import { MI } from "./MockIcons";
 
-function FileItem({ path, icon, onContext }: { path: string; icon: "pin" | "file"; onContext?: (e: React.MouseEvent) => void }) {
+function FileItem({
+  path,
+  icon,
+  onContext,
+  onRemove,
+}: {
+  path: string;
+  icon: "pin" | "file";
+  onContext?: (e: React.MouseEvent) => void;
+  /** Mostra um "×" ao passar o mouse (tirar da lista, sem apagar o arquivo). */
+  onRemove?: () => void;
+}) {
   const current = useApp((s) => s.tabs.find((t) => t.id === s.activeId)?.path === path);
   const pinned = useApp((s) => s.library.pinned.includes(path));
   const isTxt = extname(path) === "txt";
@@ -34,6 +45,18 @@ function FileItem({ path, icon, onContext }: { path: string; icon: "pin" | "file
       >
         {pinned ? <PinOff size={13} /> : <MI name="pin" size={13} />}
       </button>
+      {onRemove && (
+        <button
+          className="hover-act"
+          title="Tirar dos recentes (o arquivo não é apagado)"
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+        >
+          <X size={13} />
+        </button>
+      )}
     </div>
   );
 }
@@ -186,13 +209,21 @@ export function Sidebar() {
           <div className="hint">Fixe arquivos pelo menu da aba ou passando o mouse em Recentes.</div>
         )}
 
-        <div className="sec">RECENTES</div>
+        <div className="sec with-act">
+          RECENTES
+          {recents.length > 0 && (
+            <button className="txt" title="Limpar a lista de recentes (os arquivos não são apagados)" onClick={() => void clearRecents()}>
+              LIMPAR
+            </button>
+          )}
+        </div>
         {recents.length ? (
           recents.map((r) => (
             <FileItem
               key={r.path}
               path={r.path}
               icon="file"
+              onRemove={() => forgetRecent(r.path)}
               onContext={(e) =>
                 setState({
                   menu: {

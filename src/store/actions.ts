@@ -522,6 +522,15 @@ export function forgetRecent(path: string) {
   setLibrary((l) => ({ recents: l.recents.filter((r) => r.path !== path) }));
 }
 
+/** Esvazia a lista de recentes, depois de confirmar (os arquivos não são apagados). */
+export async function clearRecents() {
+  const choice = await askUser("Limpar os recentes?", "A lista fica vazia. Os arquivos continuam no computador, onde estão.", [
+    { id: "cancel", label: "Cancelar", variant: "ghost" },
+    { id: "clear", label: "Limpar", variant: "danger" },
+  ]);
+  if (choice === "clear") setLibrary(() => ({ recents: [] }));
+}
+
 export function togglePin(path: string) {
   setLibrary((l) => ({ pinned: l.pinned.includes(path) ? l.pinned.filter((p) => p !== path) : [...l.pinned, path] }));
 }
